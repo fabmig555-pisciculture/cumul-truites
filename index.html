@@ -1,123 +1,14 @@
 <!doctype html>
-<html lang="fr"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b0d10"><meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.webmanifest"><title>Cumul Truites</title>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#123b32"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="manifest" href="manifest.webmanifest"><title>Cumul Truites V6</title>
 <style>
-body{margin:0;background:#0b0d10;color:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}
-main{max-width:720px;margin:auto;padding:10px 12px 28px}h1{margin:2px 0;font-size:30px}.muted{color:#9ba4b2}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.card{background:#151922;border:1px solid #2a303b;border-radius:16px;padding:11px}.wide{grid-column:1/-1}
-.value{font-size:24px;font-weight:750;margin-top:3px}label{font-size:13px;color:#9ba4b2}
-input{width:100%;box-sizing:border-box;margin-top:7px;padding:12px;border-radius:12px;border:1px solid #2a303b;background:#11151b;color:white;font-size:18px}
-button{width:100%;padding:13px;border:0;border-radius:15px;background:#2f9cff;color:white;font-size:17px;font-weight:700;margin-top:12px}
-.secondary{background:#252b35}.danger{background:#3a2025;color:#ffb8bf}
-#scanner{display:none;position:relative;margin-top:8px;border-radius:16px;overflow:hidden;background:#000;aspect-ratio:16/9}
-video{width:100%;height:100%;object-fit:cover}.reticle{position:absolute;left:7%;right:7%;top:32%;height:36%;border:3px solid white;border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}
-#status{text-align:center;min-height:20px;margin:8px 0;color:#9ba4b2;font-size:14px}.last{margin-top:10px}.last strong{font-size:24px}
-table{width:100%;margin-top:15px;border-collapse:collapse;background:#151922}td,th{padding:9px;border-bottom:1px solid #2a303b;text-align:left}td:last-child,th:last-child{text-align:right}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small{font-size:12px;line-height:1.4;color:#9ba4b2;margin-top:12px}
-</style></head>
-<body><main>
-<h1>Cumul Truites</h1><p class="muted">Scan caméra • produits • poids • prix</p>
-<button id="start">Scanner les produits</button><button id="stop" class="secondary" style="display:none">Arrêter le scan</button>
-<div id="scanner"><video id="video" playsinline muted></video><div class="reticle"></div></div>
-<div id="status">Prêt. Lecteur hors ligne. Un bip confirme chaque scan. 2 secondes entre deux scans.</div>
-<div class="card last"><label>Dernier scan</label><br><strong id="last">—</strong><div id="code" class="muted"></div></div>
-<div class="grid">
-<div class="card"><label>Poids cumulé</label><div id="total" class="value">0,000 kg</div></div>
-<div class="card"><label>Nombre de produits</label><div id="count" class="value">0</div></div>
-<div class="card wide"><label>Prix manuel / kg (articles non configurés)</label><input id="price" type="number" step="0.01" min="0" value="33.40"></div>
-<div class="card wide"><label>Montant total TTC</label><div id="amount" class="value">0,00 €</div></div>
-</div>
-<div class="row"><button id="undo" class="secondary">Annuler le dernier</button><button id="reset" class="danger">Nouvelle livraison</button></div>
-<table id="history" style="display:none"><thead><tr><th>#</th><th>Produit</th><th>Poids</th><th>Prix</th></tr></thead><tbody></tbody></table>
-<p class="small">Produits configurés : pavé de truite X2 (article 106680) à 33,40 €/kg • truite entière vidée (article 100210) à 18,48 €/kg. Format balance : 2 + 6 chiffres article + 5 chiffres de poids en grammes + clé EAN-13. Exemple 2106680003107 = 310 g. Le scan est traité directement sur l’iPhone, sans connexion Internet. Après chaque scan, une temporisation de 2 secondes évite les doubles lectures. Le dernier chiffre du code-barres est une clé de contrôle EAN-13 : il ne doit pas servir à identifier le produit. Le type de produit est déterminé par le code article (les 6 chiffres après le 2).</p>
-</main>
+:root{font-family:system-ui,-apple-system,Arial,sans-serif;color:#17221e;background:#f3f6f3;font-synthesis:none}*{box-sizing:border-box}body{max-width:760px;margin:auto;padding:12px 14px 34px}.top{background:#123b32;color:white;border-radius:18px;padding:16px 18px;margin-bottom:12px}.top h1{font-size:1.35rem;margin:0}.top p{margin:4px 0 0;color:#d4e5dc;font-size:.9rem}.scanbox{background:white;border-radius:16px;padding:12px;box-shadow:0 2px 12px #193c2b12;margin-bottom:12px}button{border:0;border-radius:12px;padding:12px 16px;font:600 1rem inherit;cursor:pointer}.primary{background:#176c50;color:#fff;width:100%;font-weight:700}.secondary{background:#e7eee9;color:#173b30}.danger{background:#fff0ed;color:#9c3224}.row{display:flex;gap:8px;margin-top:8px}.row>*{flex:1}.scanner{display:none;width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-top:10px;background:#111}.manual{display:flex;gap:8px;margin-top:10px}.manual input{flex:1;min-width:0;padding:11px;border:1px solid #cad5ce;border-radius:10px;font-size:1rem}.status{font-size:.9rem;min-height:1.3em;margin:8px 2px 0;color:#34564a}.cards{display:grid;grid-template-columns:1fr;gap:10px}.card{background:white;border-radius:16px;padding:14px 16px;box-shadow:0 2px 12px #193c2b0d;border-left:5px solid #4c9873}.card.trout{border-color:#e29a48}.card h2{font-size:1.05rem;margin:0 0 10px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.metric span{display:block;color:#68766f;font-size:.77rem}.metric strong{font-size:1rem}.total{background:#123b32;color:white;border-left:5px solid #f1c75b}.total .metric span{color:#d4e5dc}.history{margin-top:12px;background:#fff;border-radius:16px;padding:14px}.history h2{font-size:1rem;margin:0 0 8px}.history ul{list-style:none;padding:0;margin:0;max-height:240px;overflow:auto}.history li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #edf0ed;font-size:.88rem}.history li:last-child{border:0}.muted{color:#6d7a73}.empty{color:#79857e;font-size:.9rem;padding:8px 0}.actions{margin-top:10px}.tiny{font-size:.8rem;color:#66746d;margin:8px 2px 0}@media(min-width:580px){.cards{grid-template-columns:1fr 1fr}.total{grid-column:1/-1}}
+</style></head><body>
+<header class="top"><h1>Cumul Truites <small>V6</small></h1><p>Scannez pavés et truites dans n’importe quel ordre.</p></header>
+<section class="scanbox"><button id="start" class="primary">📷 Scanner les produits</button><video id="video" class="scanner" playsinline muted></video><div class="manual"><input id="barcode" inputmode="numeric" autocomplete="off" placeholder="Ou saisir le code-barres complet"><button id="add" class="secondary">Ajouter</button></div><div id="status" class="status" aria-live="polite">Prêt à scanner.</div><div class="row"><button id="undo" class="secondary">↶ Annuler le dernier scan</button><button id="reset" class="danger">Nouvelle livraison</button></div><p class="tiny">Anti-double scan : 2 secondes · bip sonore à chaque validation</p></section>
+<main class="cards"><section class="card"><h2>Pavés de truite X2</h2><div class="metrics"><div class="metric"><span>Nombre</span><strong id="p-count">0</strong></div><div class="metric"><span>Poids total</span><strong id="p-weight">0,000 kg</strong></div><div class="metric"><span>Montant total</span><strong id="p-money">0,00 €</strong></div></div></section><section class="card trout"><h2>Truites entières vidées</h2><div class="metrics"><div class="metric"><span>Nombre</span><strong id="t-count">0</strong></div><div class="metric"><span>Poids total</span><strong id="t-weight">0,000 kg</strong></div><div class="metric"><span>Montant total</span><strong id="t-money">0,00 €</strong></div></div></section><section class="card total"><h2>Total général de la livraison</h2><div class="metrics"><div class="metric"><span>Nombre de produits</span><strong id="all-count">0</strong></div><div class="metric"><span>Poids total</span><strong id="all-weight">0,000 kg</strong></div><div class="metric"><span>Montant total</span><strong id="all-money">0,00 €</strong></div></div></section></main>
+<section class="history"><h2>Historique des scans</h2><div id="empty" class="empty">Aucun produit scanné.</div><ul id="history"></ul></section>
 <script>
-const $=x=>document.getElementById(x);let items=[],stream=null,last=0,scanTimer=null,cooldownUntil=0,audioCtx=null,canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
-function beep(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();const now=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.value=1100;g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.95,now+.008);g.gain.exponentialRampToValueAtTime(.0001,now+.20);o.connect(g);g.connect(audioCtx.destination);o.start(now);o.stop(now+.21)}catch(e){}}
-function decode(s){s=String(s).replace(/\D/g,'');if(s.length!==13||s[0]!=='2')throw Error("Code non reconnu");let sum=0;for(let i=0;i<12;i++)sum+=+s[i]*(i%2?3:1);if((10-sum%10)%10!==+s[12])throw Error("Clé EAN invalide");let article=s.slice(1,7),g=+s.slice(7,12);if(!g)throw Error("Poids invalide");let pi=productInfo(article);return{code:s,article,name:pi.name,grams:g,price:pi.price??+($('price').value||0)}}
-const PRODUCTS={
-  '106680':{name:'Pavé de truite X2',price:33.40},
-  '100210':{name:'Truite entière vidée',price:18.48}
-};
-function productInfo(article){return PRODUCTS[article]||{name:'Article '+article,price:null}}
-function render(){let g=items.reduce((a,x)=>a+x.grams,0);$('total').textContent=(g/1000).toLocaleString('fr-FR',{minimumFractionDigits:3,maximumFractionDigits:3})+' kg';$('count').textContent=items.length;let p=+($('price').value||0);let amount=items.reduce((a,x)=>a+(x.grams/1000)*x.price,0);$('amount').textContent=amount.toLocaleString('fr-FR',{style:'currency',currency:'EUR'});$('history').style.display=items.length?'':'none';$('history').querySelector('tbody').innerHTML=items.map((x,i)=>`<tr><td>${i+1}</td><td>${x.name}</td><td>${x.grams} g</td><td>${x.price.toLocaleString('fr-FR',{minimumFractionDigits:2})} €/kg</td></tr>`).join('');if(!items.length)$('price').value='33.40'}
-const L=['0001101','0011001','0010011','0111101','0100011','0110001','0101111','0111011','0110111','0001011'];
-const G=['0100111','0110011','0011011','0100001','0011101','0111001','0000101','0010001','0001001','0010111'];
-const R=['1110010','1100110','1101100','1000010','1011100','1001110','1010000','1000100','1001000','1110100'];
-const PAR=['LLLLLL','LLGLGG','LLGGLG','LLGGGL','LGLLGG','LGGLLG','LGGGLL','LGLGLG','LGLGGL','LGGLGL'];
-
-function hamming(a,b){let n=0;for(let i=0;i<a.length;i++)if(a[i]!==b[i])n++;return n}
-function decodeBits(bits){
-  // Try small shifts and optional inversion. EAN-13 has exactly 95 modules.
-  for(const inv of [false,true]){
-    let b=inv?[...bits].map(x=>x?'0':'1').join(''):bits;
-    for(let off=0;off<=2;off++){
-      let x=b.slice(off,off+95);if(x.length!==95)continue;
-      if(x.slice(0,3)!=='101'||x.slice(45,50)!=='01010'||x.slice(92,95)!=='101')continue;
-      let p='',digits='';let ok=true;
-      for(let i=0;i<6;i++){
-        const seg=x.slice(3+i*7,10+i*7);let best=-1,kind='';let bd=99;
-        for(let d=0;d<10;d++){let dl=hamming(seg,L[d]);if(dl<bd){bd=dl;best=d;kind='L'}let dg=hamming(seg,G[d]);if(dg<bd){bd=dg;best=d;kind='G'}}
-        if(bd>1){ok=false;break}p+=kind;digits+=best;
-      }
-      if(!ok)continue;const first=PAR.indexOf(p);if(first<0)continue;digits=String(first)+digits;
-      for(let i=0;i<6;i++){const seg=x.slice(50+i*7,57+i*7);let best=-1,bd=99;for(let d=0;d<10;d++){let z=hamming(seg,R[d]);if(z<bd){bd=z;best=d}}if(bd>1){ok=false;break}digits+=best}
-      if(!ok)continue;try{decode(digits);return digits}catch(e){}
-    }
-  }
-  return null;
-}
-function runCandidates(vals){
-  if(vals.length<20)return null;
-  // Try several thresholds; adaptive threshold is much more reliable on glossy labels.
-  let min=255,max=0;for(const v of vals){if(v<min)min=v;if(v>max)max=v}if(max-min<25)return null;
-  const thresholds=[min+(max-min)*.35,min+(max-min)*.45,min+(max-min)*.50,min+(max-min)*.55,min+(max-min)*.65];
-  for(const t of thresholds){
-    const bits=vals.map(v=>v<t?1:0);let runs=[],states=[];let st=bits[0],n=1;for(let i=1;i<bits.length;i++){if(bits[i]===st)n++;else{runs.push(n);states.push(st);st=bits[i];n=1}}runs.push(n);states.push(st);
-    // Find a candidate 59-run sequence. Score guard widths first, then decode using normalized modules.
-    for(let a=0;a<=runs.length-59;a++){
-      let rr=runs.slice(a,a+59), total=rr.reduce((q,v)=>q+v,0), module=total/95;
-      if(module<1.0||module>20)continue;
-      let bits95='',valid=true;
-      for(let i=0;i<59;i++){let nmod=Math.round(rr[i]/module);if(nmod<1||nmod>4){valid=false;break}bits95+=(states[a+i]?'1':'0').repeat(nmod)}
-      if(!valid)continue;
-      if(bits95.length<94||bits95.length>96)continue;
-      if(bits95.length!==95){
-        // Correct one-module rounding drift by trimming/padding the longest run.
-        if(bits95.length>95)bits95=bits95.slice(0,95);else bits95=bits95.padEnd(95,'0');
-      }
-      const d=decodeBits(bits95);if(d)return d;
-    }
-  }
-  return null;
-}
-function scanRow(data,w,y){
-  const vals=new Array(w);for(let x=0;x<w;x++){let i=(y*w+x)*4;vals[x]=.299*data[i]+.587*data[i+1]+.114*data[i+2]}
-  return runCandidates(vals);
-}
-function scanFrame(){
-  if(!stream)return;const v=$('video');if(v.readyState<2){scanTimer=requestAnimationFrame(scanFrame);return}
-  const vw=v.videoWidth,vh=v.videoHeight;if(!vw||!vh){scanTimer=requestAnimationFrame(scanFrame);return}
-  const w=Math.min(vw,1600),h=Math.round(vh*w/vw);canvas.width=w;canvas.height=h;ctx.drawImage(v,0,0,w,h);
-  // Scan many horizontal lines, including the central area and the lower part of the reticle.
-  const ys=[];for(let i=0;i<28;i++)ys.push(Math.round(h*(.18+i*.025)));
-  for(const y of ys){
-    let s=scanRow(ctx.getImageData(0,Math.max(0,y),w,1).data,w,0);
-    if(s&&Date.now()>=cooldownUntil){try{let x=decode(s);last=Date.now();cooldownUntil=last+2000;items.push(x);$('last').textContent=x.grams+' g';$('code').textContent=x.code+' • '+x.name;$('status').textContent='Scan enregistré. Attends 2 secondes…';render();beep();navigator.vibrate?.(140);break}catch(e){}}
-  }
-  if(Date.now()>=cooldownUntil)$('status').textContent=items.length?'Présente le code-barres suivant…':'Cadre le code-barres bien horizontalement…';scanTimer=requestAnimationFrame(scanFrame)
-}
-async function start(){try{
-  if(!navigator.mediaDevices?.getUserMedia)throw Error("Caméra indisponible sur ce navigateur.");
-  $('scanner').style.display='block';$('start').style.display='none';$('stop').style.display='';$('status').textContent='Activation de la caméra…';
-  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
-  $('video').srcObject=stream;await $('video').play();
-  // If the camera exposes optical/digital zoom, use a moderate zoom to make small labels easier to read.
-  const track=stream.getVideoTracks()[0],caps=track.getCapabilities?.();if(caps?.zoom){try{const z=Math.min(caps.zoom.max,Math.max(caps.zoom.min,2));await track.applyConstraints({advanced:[{zoom:z}]})}catch(e){}}
-  $('status').textContent='Cadre le code-barres bien horizontalement…';scanTimer=requestAnimationFrame(scanFrame)
-}catch(e){$('status').textContent=e.name==='NotAllowedError'?'Autorise l’accès à la caméra dans Safari.':e.message;stop()}}
-function stop(){if(scanTimer)cancelAnimationFrame(scanTimer);scanTimer=null;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('video').srcObject=null;$('scanner').style.display='none';$('start').style.display='';$('stop').style.display='none'}
-$('start').onclick=start;$('stop').onclick=stop;$('price').oninput=render;$('undo').onclick=()=>{items.pop();render()};$('reset').onclick=()=>{if(confirm('Effacer cette livraison ?')){items=[];$('price').value='33.40';render();$('last').textContent='—';$('code').textContent=''}};render();
+(()=>{'use strict';const rates={106680:{name:'Pavé de truite X2',price:33.40,key:'p'},100210:{name:'Truite entière vidée',price:18.48,key:'t'}},$=id=>document.getElementById(id);let items=JSON.parse(localStorage.getItem('cumul-truites-v6')||'[]'),lastAccepted='',lastTime=0,stream=null,detector=null,timer=null;const fmt=(n,d=2)=>n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}), euro=n=>fmt(n)+' €',weight=n=>fmt(n/1000,3)+' kg';function save(){localStorage.setItem('cumul-truites-v6',JSON.stringify(items));render()}function render(){let sums={p:{n:0,g:0,c:0},t:{n:0,g:0,c:0}};for(const x of items){const s=sums[x.key];s.n++;s.g+=x.grams;s.c+=x.grams/1000*x.price}for(const k of ['p','t']){$(k+'-count').textContent=sums[k].n;$(k+'-weight').textContent=weight(sums[k].g);$(k+'-money').textContent=euro(sums[k].c)}const n=sums.p.n+sums.t.n,g=sums.p.g+sums.t.g,c=sums.p.c+sums.t.c;$('all-count').textContent=n;$('all-weight').textContent=weight(g);$('all-money').textContent=euro(c);$('history').innerHTML='';$('empty').style.display=items.length?'none':'block';items.slice().reverse().forEach((x,i)=>{const li=document.createElement('li'),left=document.createElement('span'),right=document.createElement('span');left.textContent=`${x.name} · ${weight(x.grams)} · ${new Date(x.at).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;right.textContent=euro(x.grams/1000*x.price);li.append(left,right);$('history').append(li)})}function beep(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.type='square';o.frequency.value=1050;g.gain.setValueAtTime(.75,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.32);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.33);setTimeout(()=>c.close(),500)}catch{}}function addCode(raw){const code=String(raw).replace(/\D/g,'');if(code.length!==13){$('status').textContent='Code invalide : saisissez ou scannez les 13 chiffres.';return false}const article=code.slice(1,7),product=rates[article];if(!product){$('status').textContent='Produit non reconnu (code article '+article+').';return false}const grams=Number(code.slice(7,12));if(!grams){$('status').textContent='Poids absent ou invalide dans le code.';return false}const now=Date.now();if(code===lastAccepted&&now-lastTime<2000){$('status').textContent='Scan ignoré : ce produit vient déjà d’être validé.';return false}lastAccepted=code;lastTime=now;items.push({code,name:product.name,key:product.key,price:product.price,grams,at:now});save();$('status').textContent=`✓ ${product.name} — ${weight(grams)} — ${euro(grams/1000*product.price)}`;beep();$('barcode').value='';return true}function checksumOK(s){let sum=0;for(let i=0;i<12;i++)sum+=Number(s[i])*(i%2?3:1);return (10-sum%10)%10===Number(s[12])}async function start(){if(!navigator.mediaDevices?.getUserMedia){$('status').textContent='Caméra indisponible dans ce navigateur. Utilisez la saisie du code.';return}if(!('BarcodeDetector'in window)){ $('status').textContent='Lecteur caméra non pris en charge par ce navigateur. Utilisez la saisie du code-barres.';return}try{const formats=await BarcodeDetector.getSupportedFormats();if(!formats.includes('ean_13'))throw Error('EAN-13 indisponible');detector=new BarcodeDetector({formats:['ean_13']});stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}}});const v=$('video');v.srcObject=stream;v.style.display='block';await v.play();$('start').textContent='Arrêter le scan';$('status').textContent='Caméra active. Présentez un code-barres à la fois.';scanLoop()}catch(e){stop();$('status').textContent='Impossible de démarrer le lecteur caméra. Vérifiez l’autorisation caméra ou saisissez le code.'}}async function scanLoop(){if(!stream||!detector)return;try{const found=await detector.detect($('video'));for(const b of found){if(b.rawValue&&checksumOK(b.rawValue))addCode(b.rawValue)}}catch{}timer=setTimeout(scanLoop,180)}function stop(){if(timer)clearTimeout(timer);timer=null;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('video').srcObject=null;$('video').style.display='none';$('start').textContent='📷 Scanner les produits'}$('start').onclick=()=>stream?stop():start();$('add').onclick=()=>addCode($('barcode').value);$('barcode').addEventListener('keydown',e=>{if(e.key==='Enter')addCode(e.target.value)});$('undo').onclick=()=>{if(items.length){items.pop();lastAccepted='';save();$('status').textContent='Dernier scan annulé.'}else $('status').textContent='Aucun scan à annuler.'};$('reset').onclick=()=>{if(!items.length){$('status').textContent='La livraison est déjà vide.';return}if(confirm('Effacer tous les scans et commencer une nouvelle livraison ?')){items=[];lastAccepted='';save();$('status').textContent='Nouvelle livraison prête.'}};if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});render()})();
 </script></body></html>
