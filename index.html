@@ -5,39 +5,44 @@
 <link rel="manifest" href="manifest.webmanifest"><title>Cumul Truites</title>
 <style>
 body{margin:0;background:#0b0d10;color:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}
-main{max-width:720px;margin:auto;padding:18px 16px 40px}h1{margin:5px 0}.muted{color:#9ba4b2}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.card{background:#151922;border:1px solid #2a303b;border-radius:18px;padding:15px}.wide{grid-column:1/-1}
-.value{font-size:27px;font-weight:750;margin-top:5px}label{font-size:13px;color:#9ba4b2}
+main{max-width:720px;margin:auto;padding:10px 12px 28px}h1{margin:2px 0;font-size:30px}.muted{color:#9ba4b2}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.card{background:#151922;border:1px solid #2a303b;border-radius:16px;padding:11px}.wide{grid-column:1/-1}
+.value{font-size:24px;font-weight:750;margin-top:3px}label{font-size:13px;color:#9ba4b2}
 input{width:100%;box-sizing:border-box;margin-top:7px;padding:12px;border-radius:12px;border:1px solid #2a303b;background:#11151b;color:white;font-size:18px}
-button{width:100%;padding:15px;border:0;border-radius:15px;background:#2f9cff;color:white;font-size:17px;font-weight:700;margin-top:12px}
+button{width:100%;padding:13px;border:0;border-radius:15px;background:#2f9cff;color:white;font-size:17px;font-weight:700;margin-top:12px}
 .secondary{background:#252b35}.danger{background:#3a2025;color:#ffb8bf}
-#scanner{display:none;position:relative;margin-top:14px;border-radius:20px;overflow:hidden;background:#000;aspect-ratio:1}
+#scanner{display:none;position:relative;margin-top:8px;border-radius:16px;overflow:hidden;background:#000;aspect-ratio:16/9}
 video{width:100%;height:100%;object-fit:cover}.reticle{position:absolute;left:7%;right:7%;top:32%;height:36%;border:3px solid white;border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}
-#status{text-align:center;min-height:24px;margin:12px 0;color:#9ba4b2}.last{margin-top:10px}.last strong{font-size:24px}
+#status{text-align:center;min-height:20px;margin:8px 0;color:#9ba4b2;font-size:14px}.last{margin-top:10px}.last strong{font-size:24px}
 table{width:100%;margin-top:15px;border-collapse:collapse;background:#151922}td,th{padding:9px;border-bottom:1px solid #2a303b;text-align:left}td:last-child,th:last-child{text-align:right}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small{font-size:12px;line-height:1.4;color:#9ba4b2;margin-top:12px}
 </style></head>
 <body><main>
-<h1>Cumul Truites</h1><p class="muted">Scan caméra • poids • nombre • prix</p>
-<div class="grid">
-<div class="card"><label>Poids cumulé</label><div id="total" class="value">0,000 kg</div></div>
-<div class="card"><label>Nombre de pavés</label><div id="count" class="value">0</div></div>
-<div class="card wide"><label>Prix TTC / kg</label><input id="price" type="number" step="0.01" min="0" value="33.40"></div>
-<div class="card wide"><label>Montant total TTC</label><div id="amount" class="value">0,00 €</div></div>
-</div>
-<button id="start">Scanner les pavés</button><button id="stop" class="secondary" style="display:none">Arrêter le scan</button>
+<h1>Cumul Truites</h1><p class="muted">Scan caméra • produits • poids • prix</p>
+<button id="start">Scanner les produits</button><button id="stop" class="secondary" style="display:none">Arrêter le scan</button>
 <div id="scanner"><video id="video" playsinline muted></video><div class="reticle"></div></div>
 <div id="status">Prêt. Lecteur hors ligne. Un bip confirme chaque scan. 2 secondes entre deux scans.</div>
 <div class="card last"><label>Dernier scan</label><br><strong id="last">—</strong><div id="code" class="muted"></div></div>
+<div class="grid">
+<div class="card"><label>Poids cumulé</label><div id="total" class="value">0,000 kg</div></div>
+<div class="card"><label>Nombre de produits</label><div id="count" class="value">0</div></div>
+<div class="card wide"><label>Prix manuel / kg (articles non configurés)</label><input id="price" type="number" step="0.01" min="0" value="33.40"></div>
+<div class="card wide"><label>Montant total TTC</label><div id="amount" class="value">0,00 €</div></div>
+</div>
 <div class="row"><button id="undo" class="secondary">Annuler le dernier</button><button id="reset" class="danger">Nouvelle livraison</button></div>
-<table id="history" style="display:none"><thead><tr><th>#</th><th>Article</th><th>Poids</th></tr></thead><tbody></tbody></table>
-<p class="small">Format balance : 2 + 6 chiffres article + 5 chiffres de poids en grammes + clé EAN-13. Exemple 2106680003107 = 310 g. Le scan est traité directement sur l’iPhone, sans connexion Internet. Après chaque scan, une temporisation de 2 secondes évite les doubles lectures.</p>
+<table id="history" style="display:none"><thead><tr><th>#</th><th>Produit</th><th>Poids</th><th>Prix</th></tr></thead><tbody></tbody></table>
+<p class="small">Produits configurés : pavé de truite X2 (article 106680) à 33,40 €/kg • truite entière vidée (article 100210) à 18,48 €/kg. Format balance : 2 + 6 chiffres article + 5 chiffres de poids en grammes + clé EAN-13. Exemple 2106680003107 = 310 g. Le scan est traité directement sur l’iPhone, sans connexion Internet. Après chaque scan, une temporisation de 2 secondes évite les doubles lectures. Le dernier chiffre du code-barres est une clé de contrôle EAN-13 : il ne doit pas servir à identifier le produit. Le type de produit est déterminé par le code article (les 6 chiffres après le 2).</p>
 </main>
 <script>
 const $=x=>document.getElementById(x);let items=[],stream=null,last=0,scanTimer=null,cooldownUntil=0,audioCtx=null,canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
-function beep(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.16,audioCtx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.12);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.13)}catch(e){}}
-function decode(s){s=String(s).replace(/\D/g,'');if(s.length!==13||s[0]!=='2')throw Error("Code non reconnu");let sum=0;for(let i=0;i<12;i++)sum+=+s[i]*(i%2?3:1);if((10-sum%10)%10!==+s[12])throw Error("Clé EAN invalide");let article=s.slice(1,7),g=+s.slice(7,12);if(!g)throw Error("Poids invalide");return{code:s,article,name:article==='106680'?'Pavé de truite X2':'Article '+article,grams:g}}
-function render(){let g=items.reduce((a,x)=>a+x.grams,0),p=+($('price').value||0);$('total').textContent=(g/1000).toLocaleString('fr-FR',{minimumFractionDigits:3,maximumFractionDigits:3})+' kg';$('count').textContent=items.length;$('amount').textContent=(g/1000*p).toLocaleString('fr-FR',{style:'currency',currency:'EUR'});$('history').style.display=items.length?'':'none';$('history').querySelector('tbody').innerHTML=items.map((x,i)=>`<tr><td>${i+1}</td><td>${x.name}</td><td>${x.grams} g</td></tr>`).join('')}
+function beep(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();const now=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.value=1100;g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.95,now+.008);g.gain.exponentialRampToValueAtTime(.0001,now+.20);o.connect(g);g.connect(audioCtx.destination);o.start(now);o.stop(now+.21)}catch(e){}}
+function decode(s){s=String(s).replace(/\D/g,'');if(s.length!==13||s[0]!=='2')throw Error("Code non reconnu");let sum=0;for(let i=0;i<12;i++)sum+=+s[i]*(i%2?3:1);if((10-sum%10)%10!==+s[12])throw Error("Clé EAN invalide");let article=s.slice(1,7),g=+s.slice(7,12);if(!g)throw Error("Poids invalide");let pi=productInfo(article);return{code:s,article,name:pi.name,grams:g,price:pi.price??+($('price').value||0)}}
+const PRODUCTS={
+  '106680':{name:'Pavé de truite X2',price:33.40},
+  '100210':{name:'Truite entière vidée',price:18.48}
+};
+function productInfo(article){return PRODUCTS[article]||{name:'Article '+article,price:null}}
+function render(){let g=items.reduce((a,x)=>a+x.grams,0);$('total').textContent=(g/1000).toLocaleString('fr-FR',{minimumFractionDigits:3,maximumFractionDigits:3})+' kg';$('count').textContent=items.length;let p=+($('price').value||0);let amount=items.reduce((a,x)=>a+(x.grams/1000)*x.price,0);$('amount').textContent=amount.toLocaleString('fr-FR',{style:'currency',currency:'EUR'});$('history').style.display=items.length?'':'none';$('history').querySelector('tbody').innerHTML=items.map((x,i)=>`<tr><td>${i+1}</td><td>${x.name}</td><td>${x.grams} g</td><td>${x.price.toLocaleString('fr-FR',{minimumFractionDigits:2})} €/kg</td></tr>`).join('');if(!items.length)$('price').value='33.40'}
 const L=['0001101','0011001','0010011','0111101','0100011','0110001','0101111','0111011','0110111','0001011'];
 const G=['0100111','0110011','0011011','0100001','0011101','0111001','0000101','0010001','0001001','0010111'];
 const R=['1110010','1100110','1101100','1000010','1011100','1001110','1010000','1000100','1001000','1110100'];
@@ -100,7 +105,7 @@ function scanFrame(){
   const ys=[];for(let i=0;i<28;i++)ys.push(Math.round(h*(.18+i*.025)));
   for(const y of ys){
     let s=scanRow(ctx.getImageData(0,Math.max(0,y),w,1).data,w,0);
-    if(s&&Date.now()>=cooldownUntil){try{let x=decode(s);last=Date.now();cooldownUntil=last+2000;items.push(x);$('last').textContent=x.grams+' g';$('code').textContent=x.code+' • '+x.name;$('status').textContent='Scan enregistré. Attends 2 secondes…';render();beep();navigator.vibrate?.(80);break}catch(e){}}
+    if(s&&Date.now()>=cooldownUntil){try{let x=decode(s);last=Date.now();cooldownUntil=last+2000;items.push(x);$('last').textContent=x.grams+' g';$('code').textContent=x.code+' • '+x.name;$('status').textContent='Scan enregistré. Attends 2 secondes…';render();beep();navigator.vibrate?.(140);break}catch(e){}}
   }
   if(Date.now()>=cooldownUntil)$('status').textContent=items.length?'Présente le code-barres suivant…':'Cadre le code-barres bien horizontalement…';scanTimer=requestAnimationFrame(scanFrame)
 }
@@ -114,5 +119,5 @@ async function start(){try{
   $('status').textContent='Cadre le code-barres bien horizontalement…';scanTimer=requestAnimationFrame(scanFrame)
 }catch(e){$('status').textContent=e.name==='NotAllowedError'?'Autorise l’accès à la caméra dans Safari.':e.message;stop()}}
 function stop(){if(scanTimer)cancelAnimationFrame(scanTimer);scanTimer=null;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('video').srcObject=null;$('scanner').style.display='none';$('start').style.display='';$('stop').style.display='none'}
-$('start').onclick=start;$('stop').onclick=stop;$('price').oninput=render;$('undo').onclick=()=>{items.pop();render()};$('reset').onclick=()=>{if(confirm('Effacer cette livraison ?')){items=[];render();$('last').textContent='—';$('code').textContent=''}};render();
+$('start').onclick=start;$('stop').onclick=stop;$('price').oninput=render;$('undo').onclick=()=>{items.pop();render()};$('reset').onclick=()=>{if(confirm('Effacer cette livraison ?')){items=[];$('price').value='33.40';render();$('last').textContent='—';$('code').textContent=''}};render();
 </script></body></html>
