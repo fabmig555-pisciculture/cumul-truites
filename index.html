@@ -41,13 +41,77 @@ const L=['0001101','0011001','0010011','0111101','0100011','0110001','0101111','
 const G=['0100111','0110011','0011011','0100001','0011101','0111001','0000101','0010001','0001001','0010111'];
 const R=['1110010','1100110','1101100','1000010','1011100','1001110','1010000','1000100','1001000','1110100'];
 const PAR=['LLLLLL','LLGLGG','LLGGLG','LLGGGL','LGLLGG','LGGLLG','LGGGLL','LGLGLG','LGLGGL','LGGLGL'];
-function bitsFromRuns(runs){let total=runs.reduce((a,b)=>a+b,0);if(!total)return null;let module=total/95;if(module<1.2||module>30)return null;let bits='';for(let i=0;i<runs.length;i++){let n=Math.max(1,Math.round(runs[i]/module));bits+=(i%2?'1':'0').repeat(n)}if(bits.length<95)return null;let best=null;for(let off=0;off<=bits.length-95;off++){let b=bits.slice(off,off+95);if(b.startsWith('101')&&b.slice(45,50)==='01010'&&b.endsWith('101')){let s=readEANBits(b);if(s)best=s}}return best}
-function readEANBits(b){let firstGuard=b.slice(0,3),mid=b.slice(45,50),end=b.slice(92,95);if(firstGuard!=='101'||mid!=='01010'||end!=='101')return null;let p='',digits='';for(let i=0;i<6;i++){let x=b.slice(3+i*7,10+i*7),d=L.indexOf(x),g=G.indexOf(x);if(d>=0){p+='L';digits+=d}else if(g>=0){p+='G';digits+=g}else return null}let first=PAR.indexOf(p);if(first<0)return null;digits=String(first)+digits;for(let i=0;i<6;i++){let x=b.slice(50+i*7,57+i*7),d=R.indexOf(x);if(d<0)return null;digits+=d}try{decode(digits);return digits}catch(e){return null}}
-function scanRow(data,w,y){let vals=new Array(w);let min=255,max=0;for(let x=0;x<w;x++){let i=(y*w+x)*4,v=.299*data[i]+.587*data[i+1]+.114*data[i+2];vals[x]=v;if(v<min)min=v;if(v>max)max=v}if(max-min<45)return null;let t=min+(max-min)*.48,bits=new Uint8Array(w);for(let x=0;x<w;x++)bits[x]=vals[x]<t?1:0;let runs=[],state=bits[0],n=1;for(let x=1;x<w;x++){if(bits[x]===state)n++;else{runs.push(n);state=bits[x];n=1}}runs.push(n);
-// Search windows around plausible EAN-13 start/end. Allow quiet zones and imperfect scale.
-for(let a=0;a<runs.length-59;a++){let window=runs.slice(a,a+59);let s=bitsFromRuns(window);if(s)return s}return null}
-function scanFrame(){if(!stream)return;const v=$('video');if(v.readyState<2){scanTimer=requestAnimationFrame(scanFrame);return}let vw=v.videoWidth,vh=v.videoHeight;if(!vw||!vh){scanTimer=requestAnimationFrame(scanFrame);return}let w=Math.min(vw,1280),h=Math.round(vh*w/vw);canvas.width=w;canvas.height=h;ctx.drawImage(v,0,0,w,h);let data=ctx.getImageData(0,Math.round(h*.30),w,Math.round(h*.40)).data;let regionH=Math.round(h*.40);for(let k=0;k<regionH;k+=Math.max(2,Math.floor(regionH/18))){let s=scanRow(data,w,k);if(s&&Date.now()-last>1200){last=Date.now();try{let x=decode(s);items.push(x);$('last').textContent=x.grams+' g';$('code').textContent=x.code+' • '+x.name;$('status').textContent='Scan enregistré. Présente le suivant…';render();navigator.vibrate?.(80);break}catch(e){}}}$('status').textContent=items.length?'Présente le code-barres suivant…':'Présente le code-barres dans le cadre…';scanTimer=requestAnimationFrame(scanFrame)}
-async function start(){try{if(!navigator.mediaDevices?.getUserMedia)throw Error("Caméra indisponible sur ce navigateur.");$('scanner').style.display='block';$('start').style.display='none';$('stop').style.display='';$('status').textContent='Activation de la caméra…';stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});$('video').srcObject=stream;await $('video').play();$('status').textContent='Présente le code-barres dans le cadre…';scanTimer=requestAnimationFrame(scanFrame)}catch(e){$('status').textContent=e.name==='NotAllowedError'?'Autorise l’accès à la caméra dans Safari.':e.message;stop()}}
+
+function hamming(a,b){let n=0;for(let i=0;i<a.length;i++)if(a[i]!==b[i])n++;return n}
+function decodeBits(bits){
+  // Try small shifts and optional inversion. EAN-13 has exactly 95 modules.
+  for(const inv of [false,true]){
+    let b=inv?[...bits].map(x=>x?'0':'1').join(''):bits;
+    for(let off=0;off<=2;off++){
+      let x=b.slice(off,off+95);if(x.length!==95)continue;
+      if(x.slice(0,3)!=='101'||x.slice(45,50)!=='01010'||x.slice(92,95)!=='101')continue;
+      let p='',digits='';let ok=true;
+      for(let i=0;i<6;i++){
+        const seg=x.slice(3+i*7,10+i*7);let best=-1,kind='';let bd=99;
+        for(let d=0;d<10;d++){let dl=hamming(seg,L[d]);if(dl<bd){bd=dl;best=d;kind='L'}let dg=hamming(seg,G[d]);if(dg<bd){bd=dg;best=d;kind='G'}}
+        if(bd>1){ok=false;break}p+=kind;digits+=best;
+      }
+      if(!ok)continue;const first=PAR.indexOf(p);if(first<0)continue;digits=String(first)+digits;
+      for(let i=0;i<6;i++){const seg=x.slice(50+i*7,57+i*7);let best=-1,bd=99;for(let d=0;d<10;d++){let z=hamming(seg,R[d]);if(z<bd){bd=z;best=d}}if(bd>1){ok=false;break}digits+=best}
+      if(!ok)continue;try{decode(digits);return digits}catch(e){}
+    }
+  }
+  return null;
+}
+function runCandidates(vals){
+  if(vals.length<20)return null;
+  // Try several thresholds; adaptive threshold is much more reliable on glossy labels.
+  let min=255,max=0;for(const v of vals){if(v<min)min=v;if(v>max)max=v}if(max-min<25)return null;
+  const thresholds=[min+(max-min)*.35,min+(max-min)*.45,min+(max-min)*.50,min+(max-min)*.55,min+(max-min)*.65];
+  for(const t of thresholds){
+    const bits=vals.map(v=>v<t?1:0);let runs=[],states=[];let st=bits[0],n=1;for(let i=1;i<bits.length;i++){if(bits[i]===st)n++;else{runs.push(n);states.push(st);st=bits[i];n=1}}runs.push(n);states.push(st);
+    // Find a candidate 59-run sequence. Score guard widths first, then decode using normalized modules.
+    for(let a=0;a<=runs.length-59;a++){
+      let rr=runs.slice(a,a+59), total=rr.reduce((q,v)=>q+v,0), module=total/95;
+      if(module<1.0||module>20)continue;
+      let bits95='',valid=true;
+      for(let i=0;i<59;i++){let nmod=Math.round(rr[i]/module);if(nmod<1||nmod>4){valid=false;break}bits95+=(states[a+i]?'1':'0').repeat(nmod)}
+      if(!valid)continue;
+      if(bits95.length<94||bits95.length>96)continue;
+      if(bits95.length!==95){
+        // Correct one-module rounding drift by trimming/padding the longest run.
+        if(bits95.length>95)bits95=bits95.slice(0,95);else bits95=bits95.padEnd(95,'0');
+      }
+      const d=decodeBits(bits95);if(d)return d;
+    }
+  }
+  return null;
+}
+function scanRow(data,w,y){
+  const vals=new Array(w);for(let x=0;x<w;x++){let i=(y*w+x)*4;vals[x]=.299*data[i]+.587*data[i+1]+.114*data[i+2]}
+  return runCandidates(vals);
+}
+function scanFrame(){
+  if(!stream)return;const v=$('video');if(v.readyState<2){scanTimer=requestAnimationFrame(scanFrame);return}
+  const vw=v.videoWidth,vh=v.videoHeight;if(!vw||!vh){scanTimer=requestAnimationFrame(scanFrame);return}
+  const w=Math.min(vw,1600),h=Math.round(vh*w/vw);canvas.width=w;canvas.height=h;ctx.drawImage(v,0,0,w,h);
+  // Scan many horizontal lines, including the central area and the lower part of the reticle.
+  const ys=[];for(let i=0;i<28;i++)ys.push(Math.round(h*(.18+i*.025)));
+  for(const y of ys){
+    let s=scanRow(ctx.getImageData(0,Math.max(0,y),w,1).data,w,0);
+    if(s&&Date.now()-last>900){last=Date.now();try{let x=decode(s);items.push(x);$('last').textContent=x.grams+' g';$('code').textContent=x.code+' • '+x.name;$('status').textContent='Scan enregistré. Présente le suivant…';render();navigator.vibrate?.(80);break}catch(e){}}
+  }
+  if(Date.now()-last>1500)$('status').textContent=items.length?'Présente le code-barres suivant…':'Cadre le code-barres bien horizontalement…';scanTimer=requestAnimationFrame(scanFrame)
+}
+async function start(){try{
+  if(!navigator.mediaDevices?.getUserMedia)throw Error("Caméra indisponible sur ce navigateur.");
+  $('scanner').style.display='block';$('start').style.display='none';$('stop').style.display='';$('status').textContent='Activation de la caméra…';
+  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
+  $('video').srcObject=stream;await $('video').play();
+  // If the camera exposes optical/digital zoom, use a moderate zoom to make small labels easier to read.
+  const track=stream.getVideoTracks()[0],caps=track.getCapabilities?.();if(caps?.zoom){try{const z=Math.min(caps.zoom.max,Math.max(caps.zoom.min,2));await track.applyConstraints({advanced:[{zoom:z}]})}catch(e){}}
+  $('status').textContent='Cadre le code-barres bien horizontalement…';scanTimer=requestAnimationFrame(scanFrame)
+}catch(e){$('status').textContent=e.name==='NotAllowedError'?'Autorise l’accès à la caméra dans Safari.':e.message;stop()}}
 function stop(){if(scanTimer)cancelAnimationFrame(scanTimer);scanTimer=null;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('video').srcObject=null;$('scanner').style.display='none';$('start').style.display='';$('stop').style.display='none'}
 $('start').onclick=start;$('stop').onclick=stop;$('price').oninput=render;$('undo').onclick=()=>{items.pop();render()};$('reset').onclick=()=>{if(confirm('Effacer cette livraison ?')){items=[];render();$('last').textContent='—';$('code').textContent=''}};render();
 </script></body></html>
