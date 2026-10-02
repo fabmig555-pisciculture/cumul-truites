@@ -23,7 +23,7 @@ function decodeFrame(){
   const bits=new Uint8Array(W);for(let x=0;x<W;x++)bits[x]=gray[x]<threshold?1:0;
   let runs=[],st=0;for(let x=1;x<=W;x++)if(x===W||bits[x]!==bits[st]){runs.push({x:st,n:x-st,v:bits[st]});st=x}
   for(let j=0;j+2<runs.length;j++){if(runs[j].v!==1||runs[j+1].v!==0||runs[j+2].v!==1)continue;const a=runs[j].n,b=runs[j+1].n,c=runs[j+2].n,m=(a+b+c)/3;if(m<1.25||Math.max(a,b,c)>m*1.8||Math.min(a,b,c)<m*.45)continue;
-   const x0=runs[j].x,bits95=[];for(let i=0;i<95;i++){const xx=Math.floor(x0+(i+.5)*m);if(xx>=W){bits95.length=0;break}bits95.push(bits[xx])}if(bits95.length===95){const code=decodeBits(bits95);if(code)return code}
+   const x0=runs[j].x;for(let scale=.88;scale<=1.121;scale+=.02){const mm=m*scale;for(let off=-2;off<=2;off++){const bits95=[];for(let i=0;i<95;i++){const xx=Math.floor(x0+off+(i+.5)*mm);if(xx<0||xx>=W){bits95.length=0;break}bits95.push(bits[xx])}if(bits95.length===95){const code=decodeBits(bits95);if(code)return code}}}
   }
  }
  return null
