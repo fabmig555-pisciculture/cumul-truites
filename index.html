@@ -50,7 +50,7 @@ table{width:100%;margin-top:15px;border-collapse:collapse;background:#151922}td,
   <div class="sumcell"><div class="sumhead">Montant</div><div id="portionAmount" class="v">0,00 €</div></div>
 </div></div>
 <div class="card wide" style="margin-top:10px"><label>Autres articles au poids — prix manuel / kg</label><input id="price" type="number" step="0.01" min="0" value="33.40"></div>
-<div class="card weightCatalog"><label>Filets de truite portion — configuration du code article</label><div class="weightCfg"><div><input id="portionArticle" inputmode="numeric" maxlength="6" placeholder="Code article (6 chiffres)"></div><div><input id="portionPrice" type="number" step="0.01" min="0" value="0" aria-label="Prix au kg"></div></div><div class="small">Renseigne ici les 6 chiffres article du code-barres de tes filets de truite portion et leur prix au kg. Le produit sera ensuite reconnu automatiquement au scan.</div></div>
+<div class="card weightCatalog"><label>Filet de truite portion — article enregistré</label><div class="weightCfg"><div><input id="portionArticle" inputmode="numeric" maxlength="6" placeholder="Code article (6 chiffres)"></div><div><input id="portionPrice" type="number" step="0.01" min="0" value="0" aria-label="Prix au kg"></div></div><div class="small">Article enregistré : 100220 • Prix : 28,04 €/kg. Le produit est reconnu automatiquement au scan.</div></div>
 <div class="card catalog">
 <label>Produits vendus à l'unité</label>
 <div id="unitButtons" class="unitgrid"></div>
@@ -62,13 +62,13 @@ table{width:100%;margin-top:15px;border-collapse:collapse;background:#151922}td,
 <div class="row"><button id="undo" class="secondary">Annuler le dernier</button><button id="reset" class="danger">Nouvelle livraison</button></div>
 <table id="history" style="display:none"><thead><tr><th>#</th><th>Produit</th><th>Poids</th><th>Prix</th></tr></thead><tbody></tbody></table>
 <div id="deleteHint" class="deleteHint" style="display:none">Glisse un scan vers la gauche pour le supprimer.</div><div id="qtyModal" class="qtyModal" aria-hidden="true"><div class="qtyBox"><h3 id="qtyTitle">Quantité</h3><p>Choisis le nombre de produits à ajouter.</p><input id="qtyInput" type="number" min="1" step="1" value="1" inputmode="numeric"><div class="qtyQuick"><button data-q="1">1</button><button data-q="5">5</button><button data-q="10">10</button><button data-q="15">15</button></div><div class="qtyActions"><button id="qtyCancel" class="secondary">Annuler</button><button id="qtyOk">Ajouter</button></div></div></div>
-<p class="small">Les scans sont séparés par boutique. Tu peux changer de boutique à tout moment : les scans de l’autre boutique sont conservés. Pavé de truite X2 (article 106680) à 33,40 €/kg • truite entière vidée (article 100210) à 18,48 €/kg • filets de truite portion configurables par code article et prix/kg. Les articles à l’unité pourront être ajoutés au catalogue avec leur code-barres et leur prix. Format balance : 2 + 6 chiffres article + 5 chiffres de poids en grammes + clé EAN-13. Le scan est traité directement sur l’iPhone, sans connexion Internet.</p>
+<p class="small">Les scans sont séparés par boutique. Tu peux changer de boutique à tout moment : les scans de l’autre boutique sont conservés. Pavé de truite X2 (article 106680) à 33,40 €/kg • truite entière vidée (article 100210) à 18,48 €/kg • filets de truite portion (article 100220) à 28,04 €/kg. Les articles à l’unité pourront être ajoutés au catalogue avec leur code-barres et leur prix. Format balance : 2 + 6 chiffres article + 5 chiffres de poids en grammes + clé EAN-13. Le scan est traité directement sur l’iPhone, sans connexion Internet.</p>
 </div><section class="printArea" id="printArea"></section></main><script>const $=x=>document.getElementById(x);
 const PRODUCTS={
   '106680':{name:'Pavé de truite X2',price:33.40,type:'pave'},
   '100210':{name:'Truite entière vidée',price:18.48,type:'truite'}
 };
-const PORTION_CFG=JSON.parse(localStorage.getItem('cumulTruitesPortionConfig')||'null')||{article:'',price:0};
+const PORTION_CFG={article:'100220',price:28.04};localStorage.setItem('cumulTruitesPortionConfig',JSON.stringify(PORTION_CFG));
 function savePortionCfg(){localStorage.setItem('cumulTruitesPortionConfig',JSON.stringify(PORTION_CFG))}
 function syncPortionInputs(){const a=$('portionArticle'),p=$('portionPrice');if(a)a.value=PORTION_CFG.article||'';if(p)p.value=PORTION_CFG.price||0}
 function portionInfo(){return PORTION_CFG.article&&/^\d{6}$/.test(PORTION_CFG.article)?{name:'Filets de truite portion',price:+PORTION_CFG.price||0,type:'filet_portion'}:null}
@@ -79,21 +79,23 @@ const DEFAULT_STORES=[
   {id:'ferme-brion',name:'La Ferme de Brion',city:'Montpon-Ménestérol'}
 ];
 const DEFAULT_UNIT_PRODUCTS=[
-  {id:'fumee_tranchee',name:'Truite fumée tranchée (180 g)',price:0},
-  {id:'fumee_chaud',name:'Truite fumée à chaud',price:0},
-  {id:'aperitruite90',name:'Apéritruite 90 g',price:0},
-  {id:'aperitruite200',name:'Apéritruite 200 g',price:0},
-  {id:'oeufs_nature',name:'Œufs de truite nature 80 g',price:0},
-  {id:'oeufs_fumes',name:'Œufs de truite fumés 80 g',price:0},
-  {id:'soupe',name:'Soupe de truite 700 ml',price:0}
+  {id:'fumee_tranchee',name:'Truite fumée tranchée (180 g)',price:12.60},
+  {id:'fumee_chaud',name:'Truite fumée à chaud',price:5.90},
+  {id:'aperitruite90',name:'Apéritruite 90 g',price:6.10},
+  {id:'aperitruite200',name:'Apéritruite 200 g',price:10.40},
+  {id:'oeufs_nature',name:'Œufs de truite nature 80 g',price:10.30},
+  {id:'oeufs_fumes',name:'Œufs de truite fumés 80 g',price:10.70},
+  {id:'soupe',name:'Soupe de truite 700 ml',price:7.40}
 ];
 let UNIT_PRODUCTS=JSON.parse(localStorage.getItem('cumulTruitesUnitProducts')||'null');
 if(!Array.isArray(UNIT_PRODUCTS)) UNIT_PRODUCTS=DEFAULT_UNIT_PRODUCTS.map(x=>({...x}));
 else {
   const renames={'Truite fumée tranchée':'Truite fumée tranchée (180 g)','Apéritruite':'Apéritruite 90 g','Œufs de truites':'Œufs de truite nature 80 g','Soupe de truites':'Soupe de truite 700 ml'};
   UNIT_PRODUCTS=UNIT_PRODUCTS.map(p=>({...p,name:renames[p.name]||p.name}));
-  DEFAULT_UNIT_PRODUCTS.forEach(d=>{if(!UNIT_PRODUCTS.some(p=>p.id===d.id||p.name===d.name))UNIT_PRODUCTS.push({...d})});
+  DEFAULT_UNIT_PRODUCTS.forEach(d=>{const ex=UNIT_PRODUCTS.find(p=>p.id===d.id||p.name===d.name);if(ex){ex.id=d.id;ex.name=d.name;ex.price=d.price}else UNIT_PRODUCTS.push({...d})});
 }
+UNIT_PRODUCTS=UNIT_PRODUCTS.map(p=>{const d=DEFAULT_UNIT_PRODUCTS.find(x=>x.id===p.id);return d?{...p,name:d.name,price:d.price}:p});
+saveCatalog();
 let stores=JSON.parse(localStorage.getItem('cumulTruitesStores')||'null')||DEFAULT_STORES.map(x=>({...x,items:[]}));
 // Complète les anciennes boutiques avec les informations client prédéfinies.
 stores=stores.map(s=>{const d=DEFAULT_STORES.find(x=>x.name.toLowerCase()===String(s.name).toLowerCase());return d?{...s,city:s.city||d.city}:s});
@@ -109,7 +111,6 @@ function addUnit(id,qty){const p=unitProduct(id);if(!p)return;qty=Math.max(1,par
 function openQty(id){pendingUnitId=id;const p=unitProduct(id);if(!p)return;$('qtyTitle').textContent=p.name;$('qtyInput').value='1';$('qtyModal').classList.add('show');$('qtyModal').setAttribute('aria-hidden','false');setTimeout(()=>{$('qtyInput').focus();$('qtyInput').select()},80)}
 function closeQty(){pendingUnitId=null;$('qtyModal').classList.remove('show');$('qtyModal').setAttribute('aria-hidden','true')}
 function renderUnitButtons(){const box=$('unitButtons');box.innerHTML=UNIT_PRODUCTS.map(p=>`<button class="unitbtn" data-unit="${escapeHtml(p.id)}">${escapeHtml(p.name)}<small>${(+p.price||0).toLocaleString('fr-FR',{minimumFractionDigits:2})} € / pièce</small></button>`).join('');box.querySelectorAll('[data-unit]').forEach(b=>b.onclick=()=>openQty(b.dataset.unit))}
-function renderUnitButtons(){const box=$('unitButtons');box.innerHTML=UNIT_PRODUCTS.map(p=>`<button class="unitbtn" data-unit="${escapeHtml(p.id)}">${escapeHtml(p.name)}<small>${(+p.price||0).toLocaleString('fr-FR',{minimumFractionDigits:2})} € / pièce</small></button>`).join('');box.querySelectorAll('[data-unit]').forEach(b=>b.onclick=()=>addUnit(b.dataset.unit))}
 function renderCatalogEditor(){const box=$('catalogEditor');box.innerHTML=UNIT_PRODUCTS.map((p,i)=>`<div class="catalogRow"><input data-name="${i}" value="${escapeHtml(p.name)}"><input data-price="${i}" type="number" step="0.01" min="0" value="${p.price}"><button class="secondary" data-del="${i}">×</button></div>`).join('')+`<button id="addUnitProduct" class="secondary">+ Ajouter un produit</button><button id="closeCatalog" class="secondary">Fermer</button>`;
 box.querySelectorAll('[data-name]').forEach(el=>el.oninput=()=>{UNIT_PRODUCTS[+el.dataset.name].name=el.value;saveCatalog();renderUnitButtons();render()});
 box.querySelectorAll('[data-price]').forEach(el=>el.oninput=()=>{UNIT_PRODUCTS[+el.dataset.price].price=+el.value||0;saveCatalog();renderUnitButtons();render()});
