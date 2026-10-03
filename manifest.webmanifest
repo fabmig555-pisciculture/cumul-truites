@@ -1,1 +1,9 @@
-{"name":"Cumul Truites","short_name":"Cumul Truites","start_url":"./","display":"standalone","background_color":"#0b0d10","theme_color":"#0b0d10","lang":"fr-FR"}
+{
+  "name": "Cumul Truites",
+  "short_name": "Cumul Truites",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b0d10",
+  "theme_color": "#0b0d10",
+  "lang": "fr-FR"
+}
