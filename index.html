@@ -19,7 +19,8 @@ table{width:100%;margin-top:15px;border-collapse:collapse;background:#151922}td,
 
 .unitgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.unitbtn{margin:0;background:#303743;text-align:left;padding:11px}.unitbtn small{display:block;color:#9ba4b2;font-size:12px;margin-top:3px}.catalog{margin-top:10px}.catalogRow{display:grid;grid-template-columns:1fr 90px 40px;gap:6px;align-items:center;margin-top:6px}.catalogRow input{margin:0;padding:9px;font-size:15px}.catalogRow button{margin:0;padding:9px}.printBtn{background:#198754}.printArea{display:none}
 .weightCatalog{margin-top:10px}.weightCfg{display:grid;grid-template-columns:1fr 100px;gap:8px;align-items:end}.weightCfg input{margin-top:7px;padding:10px;font-size:16px}
-@media print{body{background:white;color:#111}main{max-width:none;padding:0}.noPrint{display:none!important}.printArea{display:block;font-family:Arial,sans-serif}.printHeader{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center;border-bottom:2px solid #222;padding-bottom:10px}.printLogo{max-width:120px;max-height:95px;object-fit:contain}.printCompany{font-size:12px;line-height:1.45}.printCompany strong{font-size:18px}.printTitle{text-align:center;font-size:27px;font-weight:800;margin:18px 0 12px}.printClient{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;font-size:14px}.printBox{border:1px solid #999;padding:10px;min-height:58px}.printMeta{font-size:14px;margin-bottom:18px}.printTable{width:100%;border-collapse:collapse}.printTable th,.printTable td{border:1px solid #999;padding:9px;text-align:left}.printTable th:nth-child(2),.printTable td:nth-child(2){text-align:center;width:110px}.printTable th:nth-child(3),.printTable td:nth-child(3){text-align:right;width:150px}.printNote{margin-top:18px;font-size:11px}.printSign{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:45px}.printSign>div{border-top:1px solid #999;padding-top:6px;font-size:12px;min-height:45px}}
+.qtyModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:20;align-items:flex-end;justify-content:center}.qtyModal.show{display:flex}.qtyBox{width:min(520px,100%);background:#171b23;border-radius:22px 22px 0 0;padding:18px 16px 28px;box-sizing:border-box;box-shadow:0 -10px 40px rgba(0,0,0,.4)}.qtyBox h3{margin:0 0 8px;font-size:20px}.qtyBox p{margin:0 0 12px;color:#9ba4b2}.qtyBox input{font-size:28px;text-align:center;margin:0}.qtyQuick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.qtyQuick button{margin:0;background:#303743}.qtyActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.qtyActions button{margin:0}.swipeRow{position:relative;background:#3a2025}.historyRow{background:#151922}.historyRow.swiping{background:#8f2632;transform:translateX(-78px)!important}.historyRow.swiping td{background:#8f2632;color:#fff}.returnBlank{color:#777}.printPerigourdineNote{font-size:10px;margin-top:8px;color:#333}
+@media print{body{background:white;color:#111}main{max-width:none;padding:0}.noPrint{display:none!important}.printArea{display:block;font-family:Arial,sans-serif}.printHeader{display:grid;grid-template-columns:82px 1fr 150px;gap:12px;align-items:center;border-bottom:2px solid #222;padding-bottom:10px}.printContact{font-size:12px;line-height:1.45}.printContact b{font-weight:700}.printLogo{max-width:120px;max-height:95px;object-fit:contain}.printCompany{font-size:12px;line-height:1.45}.printCompany strong{font-size:18px}.printTitle{text-align:center;font-size:27px;font-weight:800;margin:18px 0 12px}.printClient{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;font-size:14px}.printBox{border:1px solid #999;padding:10px;min-height:58px}.printMeta{font-size:14px;margin-bottom:18px}.printTable{width:100%;border-collapse:collapse}.printTable th,.printTable td{border:1px solid #999;padding:9px;text-align:left}.printTable th:nth-child(2),.printTable td:nth-child(2){text-align:center;width:110px}.printTable th:nth-child(3),.printTable td:nth-child(3){text-align:right;width:150px}.printTable th:nth-child(4),.printTable td:nth-child(4){text-align:center;width:95px}.printNote{margin-top:18px;font-size:11px}.printSign{display:grid;grid-template-columns:1fr;gap:30px;margin-top:45px}.printSign>div{border-top:1px solid #999;padding-top:6px;font-size:12px;min-height:45px}}
 </style></head>
 <body><main><div class="noPrint">
 <h1>Cumul Truites</h1><p class="muted">Scan caméra • produits • boutiques • prix</p>
@@ -60,7 +61,7 @@ table{width:100%;margin-top:15px;border-collapse:collapse;background:#151922}td,
 <button id="printDelivery" class="printBtn">Imprimer le bon de livraison</button>
 <div class="row"><button id="undo" class="secondary">Annuler le dernier</button><button id="reset" class="danger">Nouvelle livraison</button></div>
 <table id="history" style="display:none"><thead><tr><th>#</th><th>Produit</th><th>Poids</th><th>Prix</th></tr></thead><tbody></tbody></table>
-<div id="deleteHint" class="deleteHint" style="display:none">Glisse un scan vers la gauche pour le supprimer.</div>
+<div id="deleteHint" class="deleteHint" style="display:none">Glisse un scan vers la gauche pour le supprimer.</div><div id="qtyModal" class="qtyModal" aria-hidden="true"><div class="qtyBox"><h3 id="qtyTitle">Quantité</h3><p>Choisis le nombre de produits à ajouter.</p><input id="qtyInput" type="number" min="1" step="1" value="1" inputmode="numeric"><div class="qtyQuick"><button data-q="1">1</button><button data-q="5">5</button><button data-q="10">10</button><button data-q="15">15</button></div><div class="qtyActions"><button id="qtyCancel" class="secondary">Annuler</button><button id="qtyOk">Ajouter</button></div></div></div>
 <p class="small">Les scans sont séparés par boutique. Tu peux changer de boutique à tout moment : les scans de l’autre boutique sont conservés. Pavé de truite X2 (article 106680) à 33,40 €/kg • truite entière vidée (article 100210) à 18,48 €/kg • filets de truite portion configurables par code article et prix/kg. Les articles à l’unité pourront être ajoutés au catalogue avec leur code-barres et leur prix. Format balance : 2 + 6 chiffres article + 5 chiffres de poids en grammes + clé EAN-13. Le scan est traité directement sur l’iPhone, sans connexion Internet.</p>
 </div><section class="printArea" id="printArea"></section></main><script>const $=x=>document.getElementById(x);
 const PRODUCTS={
@@ -77,13 +78,22 @@ const DEFAULT_STORES=[
   {id:'perigourdine',name:'La Périgourdine',city:'Saint-Médard-de-Mussidan'},
   {id:'ferme-brion',name:'La Ferme de Brion',city:'Montpon-Ménestérol'}
 ];
-let UNIT_PRODUCTS=JSON.parse(localStorage.getItem('cumulTruitesUnitProducts')||'null')||[
-  {id:'fumee_tranchee',name:'Truite fumée tranchée',price:0},
+const DEFAULT_UNIT_PRODUCTS=[
+  {id:'fumee_tranchee',name:'Truite fumée tranchée (180 g)',price:0},
   {id:'fumee_chaud',name:'Truite fumée à chaud',price:0},
-  {id:'aperitruite',name:'Apéritruite',price:0},
-  {id:'soupe',name:'Soupe de truites',price:0},
-  {id:'oeufs',name:'Œufs de truites',price:0}
+  {id:'aperitruite90',name:'Apéritruite 90 g',price:0},
+  {id:'aperitruite200',name:'Apéritruite 200 g',price:0},
+  {id:'oeufs_nature',name:'Œufs de truite nature 80 g',price:0},
+  {id:'oeufs_fumes',name:'Œufs de truite fumés 80 g',price:0},
+  {id:'soupe',name:'Soupe de truite 700 ml',price:0}
 ];
+let UNIT_PRODUCTS=JSON.parse(localStorage.getItem('cumulTruitesUnitProducts')||'null');
+if(!Array.isArray(UNIT_PRODUCTS)) UNIT_PRODUCTS=DEFAULT_UNIT_PRODUCTS.map(x=>({...x}));
+else {
+  const renames={'Truite fumée tranchée':'Truite fumée tranchée (180 g)','Apéritruite':'Apéritruite 90 g','Œufs de truites':'Œufs de truite nature 80 g','Soupe de truites':'Soupe de truite 700 ml'};
+  UNIT_PRODUCTS=UNIT_PRODUCTS.map(p=>({...p,name:renames[p.name]||p.name}));
+  DEFAULT_UNIT_PRODUCTS.forEach(d=>{if(!UNIT_PRODUCTS.some(p=>p.id===d.id||p.name===d.name))UNIT_PRODUCTS.push({...d})});
+}
 let stores=JSON.parse(localStorage.getItem('cumulTruitesStores')||'null')||DEFAULT_STORES.map(x=>({...x,items:[]}));
 // Complète les anciennes boutiques avec les informations client prédéfinies.
 stores=stores.map(s=>{const d=DEFAULT_STORES.find(x=>x.name.toLowerCase()===String(s.name).toLowerCase());return d?{...s,city:s.city||d.city}:s});
@@ -94,7 +104,11 @@ function saveState(){localStorage.setItem('cumulTruitesStores',JSON.stringify(st
 function beep(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();const now=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.value=1250;g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(1.8,now+.008);g.gain.exponentialRampToValueAtTime(.0001,now+.30);o.connect(g);g.connect(audioCtx.destination);o.start(now);o.stop(now+.31)}catch(e){}}
 function saveCatalog(){localStorage.setItem('cumulTruitesUnitProducts',JSON.stringify(UNIT_PRODUCTS))}
 function unitProduct(id){return UNIT_PRODUCTS.find(p=>p.id===id)}
-function addUnit(id){const p=unitProduct(id);if(!p)return;const st=currentStore();st.items.push({name:p.name,type:'unit',unit:true,unitId:p.id,grams:0,price:+p.price||0,code:'UNIT-'+p.id+'-'+Date.now()});$('last').textContent=p.name;$('code').textContent='Vendu à l’unité • '+money(+p.price||0);render();beep();navigator.vibrate?.(140);$('status').textContent=p.price>0?'Article ajouté.':'Article ajouté — prix à renseigner dans le catalogue.'}
+let pendingUnitId=null;
+function addUnit(id,qty){const p=unitProduct(id);if(!p)return;qty=Math.max(1,parseInt(qty,10)||1);const st=currentStore();st.items.push({name:p.name,type:'unit',unit:true,qty,unitId:p.id,grams:0,price:+p.price||0,code:'UNIT-'+p.id+'-'+Date.now()});$('last').textContent=(qty>1?qty+' × ':'')+p.name;$('code').textContent='Vendu à l’unité • '+money(+p.price||0)+' / pièce';render();beep();navigator.vibrate?.(140);$('status').textContent=p.price>0?`${qty} produit${qty>1?'s':''} ajouté${qty>1?'s':''}.`:'Produit ajouté — prix à renseigner dans le catalogue.'}
+function openQty(id){pendingUnitId=id;const p=unitProduct(id);if(!p)return;$('qtyTitle').textContent=p.name;$('qtyInput').value='1';$('qtyModal').classList.add('show');$('qtyModal').setAttribute('aria-hidden','false');setTimeout(()=>{$('qtyInput').focus();$('qtyInput').select()},80)}
+function closeQty(){pendingUnitId=null;$('qtyModal').classList.remove('show');$('qtyModal').setAttribute('aria-hidden','true')}
+function renderUnitButtons(){const box=$('unitButtons');box.innerHTML=UNIT_PRODUCTS.map(p=>`<button class="unitbtn" data-unit="${escapeHtml(p.id)}">${escapeHtml(p.name)}<small>${(+p.price||0).toLocaleString('fr-FR',{minimumFractionDigits:2})} € / pièce</small></button>`).join('');box.querySelectorAll('[data-unit]').forEach(b=>b.onclick=()=>openQty(b.dataset.unit))}
 function renderUnitButtons(){const box=$('unitButtons');box.innerHTML=UNIT_PRODUCTS.map(p=>`<button class="unitbtn" data-unit="${escapeHtml(p.id)}">${escapeHtml(p.name)}<small>${(+p.price||0).toLocaleString('fr-FR',{minimumFractionDigits:2})} € / pièce</small></button>`).join('');box.querySelectorAll('[data-unit]').forEach(b=>b.onclick=()=>addUnit(b.dataset.unit))}
 function renderCatalogEditor(){const box=$('catalogEditor');box.innerHTML=UNIT_PRODUCTS.map((p,i)=>`<div class="catalogRow"><input data-name="${i}" value="${escapeHtml(p.name)}"><input data-price="${i}" type="number" step="0.01" min="0" value="${p.price}"><button class="secondary" data-del="${i}">×</button></div>`).join('')+`<button id="addUnitProduct" class="secondary">+ Ajouter un produit</button><button id="closeCatalog" class="secondary">Fermer</button>`;
 box.querySelectorAll('[data-name]').forEach(el=>el.oninput=()=>{UNIT_PRODUCTS[+el.dataset.name].name=el.value;saveCatalog();renderUnitButtons();render()});
@@ -118,12 +132,12 @@ function render(){
   const unit=items.filter(x=>x.type==='unit');
   const other=items.filter(x=>x.type==='other'||(x.article!=='106680'&&x.article!=='100210'&&x.type!=='unit'&&x.type!=='filet_portion'));
   const paveG=pave.reduce((a,x)=>a+x.grams,0),truiteG=truite.reduce((a,x)=>a+x.grams,0),portionG=portion.reduce((a,x)=>a+x.grams,0);
-  const paveA=pave.reduce((a,x)=>a+(x.grams/1000)*x.price,0),truiteA=truite.reduce((a,x)=>a+(x.grams/1000)*x.price,0),portionA=portion.reduce((a,x)=>a+(x.grams/1000)*x.price,0),unitA=unit.reduce((a,x)=>a+x.price,0),otherA=other.reduce((a,x)=>a+(x.grams/1000)*x.price,0);
+  const paveA=pave.reduce((a,x)=>a+(x.grams/1000)*x.price,0),truiteA=truite.reduce((a,x)=>a+(x.grams/1000)*x.price,0),portionA=portion.reduce((a,x)=>a+(x.grams/1000)*x.price,0),unitA=unit.reduce((a,x)=>a+(x.price*(x.qty||1)),0),otherA=other.reduce((a,x)=>a+(x.grams/1000)*x.price,0);
   $('paveCount').textContent=pave.length;$('paveWeight').textContent=kg(paveG);$('paveAmount').textContent=money(paveA);
   $('truiteCount').textContent=truite.length;$('truiteWeight').textContent=kg(truiteG);$('truiteAmount').textContent=money(truiteA);
   if($('portionCount')){$('portionCount').textContent=portion.length;$('portionWeight').textContent=kg(portionG);$('portionAmount').textContent=money(portionA);}
   $('amount').textContent=money(paveA+truiteA+portionA+unitA+otherA);
-  $('history').querySelector('tbody').innerHTML=items.map((x,i)=>`<tr class="historyRow" data-index="${i}"><td>${i+1}</td><td>${escapeHtml(x.name)}</td><td>${x.unit?'1 pièce':x.grams+' g'}</td><td>${money(x.unit?x.price:(x.grams/1000)*x.price)}</td></tr>`).join('');
+  $('history').querySelector('tbody').innerHTML=items.map((x,i)=>`<tr class="historyRow" data-index="${i}"><td>${i+1}</td><td>${escapeHtml(x.name)}</td><td>${x.unit?((x.qty||1)+' pièce'+((x.qty||1)>1?'s':'')):x.grams+' g'}</td><td>${money(x.unit?(x.price*(x.qty||1)):(x.grams/1000)*x.price)}</td></tr>`).join('');
   renderUnitButtons();
   $('history').style.display=items.length?'':'none';$('deleteHint').style.display=items.length?'':'none';
   renderStores();saveState();
@@ -133,23 +147,22 @@ const LOGO_BASE64='/9j/4AAQSkZJRgABAQF9AH0AAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEB
 function printDelivery(){
  const st=currentStore();
  const ORDER=[
-   'Truite fumée à chaud',
-   'Truite fumée tranchée',
-   'Apéritruite 90 g',
-   'Apéritruite 200 g',
-   'Œufs de truite nature 80 g',
-   'Œufs de truite fumés 80 g',
-   'Soupe de truite 700 ml',
-   'Truite portion entière vidée (Oncorhynchus mykiss)',
-   'Filet de truite portion (Oncorhynchus mykiss)',
-   'Pavé de truite adulte (Oncorhynchus mykiss)'
+   'Truite fumée à chaud','Truite fumée tranchée (180 g)','Apéritruite 90 g','Apéritruite 200 g',
+   'Œufs de truite nature 80 g','Œufs de truite fumés 80 g','Soupe de truite 700 ml',
+   'Truite portion entière vidée (Oncorhynchus mykiss)','Filet de truite portion (Oncorhynchus mykiss)','Pavé de truite adulte (Oncorhynchus mykiss)'
  ];
+ const allUnit=['Truite fumée à chaud','Truite fumée tranchée (180 g)','Apéritruite 90 g','Apéritruite 200 g','Œufs de truite nature 80 g','Œufs de truite fumés 80 g','Soupe de truite 700 ml'];
  const aliases={
-   'Truite fumée tranchée':'Truite fumée tranchée',
+   'Truite fumée tranchée':'Truite fumée tranchée (180 g)',
    'Truite fumée à chaud':'Truite fumée à chaud',
    'Apéritruite':'Apéritruite 90 g',
+   'Apéritruite 90 g':'Apéritruite 90 g',
+   'Apéritruite 200 g':'Apéritruite 200 g',
    'Œufs de truites':'Œufs de truite nature 80 g',
+   'Œufs de truite nature 80 g':'Œufs de truite nature 80 g',
+   'Œufs de truite fumés 80 g':'Œufs de truite fumés 80 g',
    'Soupe de truites':'Soupe de truite 700 ml',
+   'Soupe de truite 700 ml':'Soupe de truite 700 ml',
    'Pavé de truite X2':'Pavé de truite adulte (Oncorhynchus mykiss)',
    'Truite entière vidée':'Truite portion entière vidée (Oncorhynchus mykiss)',
    'Filets de truite portion':'Filet de truite portion (Oncorhynchus mykiss)'
@@ -158,17 +171,21 @@ function printDelivery(){
  st.items.forEach(x=>{
    let display=aliases[x.name]||x.name;
    const key=display+'|'+(x.unit?'unit':'weight');
-   if(!groups[key])groups[key]={name:display,unit:x.unit,count:0,grams:0,first:x};
-   groups[key].count++;
+   if(!groups[key])groups[key]={name:display,unit:x.unit,count:0,grams:0};
+   groups[key].count+=x.unit?(x.qty||1):1;
    if(!x.unit)groups[key].grams+=x.grams;
  });
  const ordered=[];
  ORDER.forEach(name=>Object.values(groups).filter(g=>g.name===name).forEach(g=>ordered.push(g)));
  Object.values(groups).filter(g=>!ORDER.includes(g.name)).forEach(g=>ordered.push(g));
- const date=new Date();
- const dateText=date.toLocaleDateString('fr-FR');
- const ref=`${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}`;
- const rows=ordered.map(g=>`<tr><td>${escapeHtml(g.name)}</td><td>${g.count}</td><td>${g.unit?'—':kg(g.grams)}</td></tr>`).join('');
+ const isPeri=st.id==='perigourdine' || /périgourdine/i.test(st.name);
+ // For La Périgourdine, show every possible product so returns can be noted even when not delivered.
+ if(isPeri){
+   ORDER.forEach(name=>{if(!ordered.some(g=>g.name===name))ordered.push({name,unit:allUnit.includes(name),count:0,grams:0,missing:true})});
+   ordered.sort((a,b)=>ORDER.indexOf(a.name)-ORDER.indexOf(b.name));
+ }
+ const date=new Date(),dateText=date.toLocaleDateString('fr-FR'),ref=`${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}`;
+ const rows=ordered.map(g=>`<tr><td>${escapeHtml(g.name)}</td><td>${g.count||''}</td><td>${g.unit?'—':(g.grams?kg(g.grams):'—')}</td>${isPeri?'<td class="returnBlank"> </td>':''}</tr>`).join('');
  const city=st.city||'';
  $('printArea').innerHTML=`
  <div class="printHeader">
@@ -177,12 +194,9 @@ function printDelivery(){
    <div class="printContact"><b>Tél. :</b> 05 53 81 53 41<br><b>Mail :</b> pisciculture24@orange.fr<br><b>Site :</b> www.pechealatruite24.com</div>
  </div>
  <div class="printTitle">BON DE LIVRAISON</div>
- <div class="printClient">
-   <div class="printBox"><strong>Client / Boutique</strong><br>${escapeHtml(st.name)}${city?'<br>'+escapeHtml(city):''}</div>
-   <div class="printBox"><strong>Livraison</strong><br>Date : ${dateText}<br>Référence livraison : ${ref}</div>
- </div>
- <table class="printTable"><thead><tr><th>Produit</th><th>Nombre</th><th>Poids cumulé</th></tr></thead><tbody>${rows||'<tr><td colspan="3">Aucun produit enregistré</td></tr>'}</tbody></table>
- <div class="printNote">Bon de livraison — aucun prix ni montant ne figure sur ce document.</div>
+ <div class="printClient"><div class="printBox"><strong>Client / Boutique</strong><br>${escapeHtml(st.name)}${city?'<br>'+escapeHtml(city):''}</div><div class="printBox"><strong>Livraison</strong><br>Date : ${dateText}<br>Référence livraison : ${ref}</div></div>
+ <table class="printTable"><thead><tr><th>Produits</th><th>Nombre</th><th>Poids cumulé</th>${isPeri?'<th>Retours</th>':''}</tr></thead><tbody>${rows||'<tr><td colspan="4">Aucun produit enregistré</td></tr>'}</tbody></table>
+ ${isPeri?'<div class="printPerigourdineNote"><b>Retours :</b> inscrire dans la colonne le nombre retourné pour chaque produit, y compris ceux non livrés cette semaine.</div>':''}
  <div class="printSign"><div>Réceptionné par :<br><br>Signature : ______________________________</div></div>`;
  window.print();
 }
@@ -196,7 +210,8 @@ function attachSwipeDelete(){
   const tbody=$('history').querySelector('tbody');let sx=0,sy=0;
   tbody.querySelectorAll('.historyRow').forEach(row=>{
     row.addEventListener('touchstart',e=>{const t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;row.style.transition='none'},{passive:true});
-    row.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;row.style.transition='';if(dx<-70&&Math.abs(dx)>Math.abs(dy)*1.2)deleteItem(+row.dataset.index)},{passive:true});
+    row.addEventListener('touchmove',e=>{const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(dx<0&&Math.abs(dx)>Math.abs(dy)*1.1){const shift=Math.max(-110,dx);row.style.transform=`translateX(${shift}px)`;row.classList.toggle('swiping',dx<-35);e.preventDefault()}},{passive:false});
+    row.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;row.style.transition='';row.style.transform='';row.classList.remove('swiping');if(dx<-70&&Math.abs(dx)>Math.abs(dy)*1.2)deleteItem(+row.dataset.index)},{passive:true});
   });
 }
 const L=['0001101','0011001','0010011','0111101','0100011','0110001','0101111','0111011','0110111','0001011'];
@@ -276,6 +291,7 @@ async function start(){try{
 }catch(e){$('status').textContent=e.name==='NotAllowedError'?'Autorise l’accès à la caméra dans Safari.':e.message;stop()}}
 function stop(){if(scanTimer)cancelAnimationFrame(scanTimer);scanTimer=null;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('video').srcObject=null;$('scanner').style.display='none';$('start').style.display='';$('stop').style.display='none'}
 $('start').onclick=start;$('stop').onclick=stop;
+$('qtyCancel').onclick=closeQty;$('qtyOk').onclick=()=>{if(pendingUnitId){const q=Math.max(1,parseInt($('qtyInput').value,10)||1);const id=pendingUnitId;closeQty();addUnit(id,q)}};$('qtyModal').addEventListener('click',e=>{if(e.target===$('qtyModal'))closeQty()});document.querySelectorAll('.qtyQuick button').forEach(b=>b.onclick=()=>{$('qtyInput').value=b.dataset.q;$('qtyInput').focus()});
 $('price').oninput=render;
 $('portionArticle').oninput=e=>{PORTION_CFG.article=e.target.value.replace(/\D/g,'').slice(0,6);savePortionCfg();render()};
 $('portionPrice').oninput=e=>{PORTION_CFG.price=+e.target.value||0;savePortionCfg();render()};
