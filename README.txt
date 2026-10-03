@@ -1,10 +1,15 @@
-Cumul Truites – PWA iPhone, version hors-ligne
+Cumul Truites V8 – version hors ligne
 
-Cette version ne dépend plus de ZXing ni d'un CDN externe. Le décodage EAN-13 est réalisé en JavaScript directement dans Safari.
+Base: V7 fonctionnelle.
 
-Fichiers à placer à la racine du dépôt GitHub Pages :
-- index.html
-- manifest.webmanifest
-- sw.js
+Nouveautés:
+- Boutons pour produits vendus à l'unité (sans code-barres).
+- Catalogue modifiable: nom et prix par pièce, ajout/suppression de produits.
+- Produits préconfigurés: Truite fumée tranchée, Truite fumée à chaud, Apéritruite, Soupe de truites, Œufs de truites (prix à renseigner).
+- Les produits à l'unité peuvent être ajoutés par bouton et entrent dans le total.
+- Bon de livraison imprimable pour la boutique sélectionnée, avec date du jour et détail des produits.
+- Compatible avec l'impression AirPrint depuis l'iPhone vers une imprimante Wi-Fi compatible.
+- Conservation du scan hors ligne, des boutiques, du scan caméra, du bip et de l'anti-double-scan.
 
-Après mise à jour, recharge le site une première fois avec Internet, puis la caméra et le scan peuvent fonctionner sans connexion Internet (la page et le code sont mis en cache).
+Installation GitHub Pages:
+Remplacer index.html, manifest.webmanifest et sw.js dans le dépôt. Le cache du service worker est versionné V8.
