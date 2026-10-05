@@ -63,10 +63,11 @@ table{width:100%;margin-top:15px;border-collapse:collapse;background:#151922}td,
 <div class="row"><button id="undo" class="secondary">Annuler le dernier</button><button id="reset" class="danger">Nouvelle livraison</button></div>
 <table id="history" style="display:none"><thead><tr><th>#</th><th>Produit</th><th>Poids</th><th>Prix</th></tr></thead><tbody></tbody></table>
 <div id="deleteHint" class="deleteHint" style="display:none">Glisse un scan vers la gauche pour le supprimer.</div><div id="qtyModal" class="qtyModal" aria-hidden="true"><div class="qtyBox"><h3 id="qtyTitle">Quantité</h3><p>Choisis le nombre de produits à ajouter.</p><input id="qtyInput" type="number" min="1" step="1" value="1" inputmode="numeric"><div class="qtyQuick"><button data-q="1">1</button><button data-q="5">5</button><button data-q="10">10</button><button data-q="15">15</button></div><div class="qtyActions"><button id="qtyCancel" class="secondary">Annuler</button><button id="qtyOk">Ajouter</button></div></div></div>
-<p class="small">Les scans sont séparés par boutique. Tu peux changer de boutique à tout moment : les scans de l’autre boutique sont conservés. Pavé de truite X2 (article 106680) à 33,40 €/kg • truite entière vidée (article 100210) à 18,48 €/kg • filets de truite portion (article 100220) à 28,04 €/kg. Format balance : 2 + 6 chiffres article + 5 chiffres de poids en grammes + clé EAN-13. Le scan est traité directement sur l’iPhone, sans connexion Internet.</p>
+<p class="small">Les scans sont séparés par boutique. Tu peux changer de boutique à tout moment : les scans de l’autre boutique sont conservés. Pavé de truite X2 : articles 106680 à 33,40 €/kg et 100230 à 36,30 €/kg • truite entière vidée (article 100210) à 18,48 €/kg • filets de truite portion (article 100220) à 28,04 €/kg. Format balance : 2 + 6 chiffres article + 5 chiffres de poids en grammes + clé EAN-13. Le scan est traité directement sur l’iPhone, sans connexion Internet.</p>
 </div><section class="printArea" id="printArea"></section></main><script>const $=x=>document.getElementById(x);
 const PRODUCTS={
   '106680':{name:'Pavé de truite X2',price:33.40,type:'pave'},
+  '100230':{name:'Pavé de truite X2',price:36.30,type:'pave'},
   '100210':{name:'Truite entière vidée',price:18.48,type:'truite'}
 };
 const PORTION_CFG={article:'100220',price:28.04};localStorage.setItem('cumulTruitesPortionConfig',JSON.stringify(PORTION_CFG));

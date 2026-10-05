@@ -1,3 +1,1 @@
-Cumul Truites V13c
-Correction du sélecteur de date pour iPhone Safari.
-Le champ date natif est directement cliquable/tappable.
+Cumul Truites V14 — ajout du code article 100230 pour les pavés à 36,30 €/kg. L'ancien code 106680 à 33,40 €/kg reste reconnu.
