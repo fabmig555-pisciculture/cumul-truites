@@ -1,1 +1,5 @@
-Cumul Truites V14 — ajout du code article 100230 pour les pavés à 36,30 €/kg. L'ancien code 106680 à 33,40 €/kg reste reconnu.
+Cumul Truites V15
+- Code filets de truite portion 100220 intégré en dur à 28,04 €/kg.
+- Exemple de code reconnu : 2100220002704 = 270 g.
+- Suppression de la ligne Autres articles au poids / prix manuel.
+- Ajout automatique de La Boutique de Lauche, sans effacer les boutiques ni les livraisons existantes.
