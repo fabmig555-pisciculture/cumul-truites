@@ -1,9 +1,10 @@
 {
-  "name":"Cumul Truites",
+  "name":"Cumul Truites V16",
   "short_name":"Cumul Truites",
   "start_url":"./",
   "display":"standalone",
   "background_color":"#0b0d10",
   "theme_color":"#0b0d10",
-  "lang":"fr-FR"
+  "lang":"fr-FR",
+  "description":"Cumul des scans par boutique, transferts et sauvegarde des données"
 }
