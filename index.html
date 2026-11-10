@@ -2,7 +2,7 @@
 <html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b0d10"><meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.webmanifest"><title>Cumul Truites V16</title>
+<link rel="manifest" href="manifest.webmanifest"><title>Cumul Truites V16.1</title>
 <style>
 body{margin:0;background:#0b0d10;color:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}
 main{max-width:720px;margin:auto;padding:10px 12px 28px}h1{margin:2px 0;font-size:30px}.muted{color:#9ba4b2}
@@ -22,6 +22,7 @@ table{width:100%;margin-top:15px;border-collapse:collapse;background:#151922}td,
 .qtyModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:20;align-items:flex-end;justify-content:center}.qtyModal.show{display:flex}.qtyBox{width:min(520px,100%);background:#171b23;border-radius:22px 22px 0 0;padding:18px 16px 28px;box-sizing:border-box;box-shadow:0 -10px 40px rgba(0,0,0,.4)}.qtyBox h3{margin:0 0 8px;font-size:20px}.qtyBox p{margin:0 0 12px;color:#9ba4b2}.qtyBox input{font-size:28px;text-align:center;margin:0}.qtyQuick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.qtyQuick button{margin:0;background:#303743}.qtyActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.qtyActions button{margin:0}.swipeRow{position:relative;background:#3a2025}.historyRow{background:#151922}.historyRow.swiping{background:#8f2632;transform:translateX(-78px)!important}.historyRow.swiping td{background:#8f2632;color:#fff}.returnBlank{color:#777}.printPerigourdineNote{font-size:10px;margin-top:8px;color:#333}
 .transferPanel{margin:10px 0;padding:12px;background:#151922;border-radius:14px}.transferPanel label{display:block;margin:0 0 6px}.transferPanel select{width:100%;padding:12px;border-radius:10px;background:#252b35;color:#fff;border:1px solid #39414d}.transferPanel .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.transferPanel .row button{margin-top:8px}.backupPanel{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.backupPanel button{margin:0}.pickCell{width:40px;text-align:center!important}.pickCell input{width:20px;height:20px;margin:0}
 #history:not(.selecting) .pickCell{display:none}
+.pdfModal{display:none;position:fixed;inset:0;z-index:50;background:#000b;align-items:center;justify-content:center;padding:18px}.pdfModal.show{display:flex}.pdfBox{width:min(440px,100%);background:#171b23;border-radius:18px;padding:18px;box-sizing:border-box}.pdfBox h3{margin:0 0 8px}.pdfBox p{color:#c4cad4;line-height:1.45}.pdfBox button,.pdfBox a{display:block;text-align:center;text-decoration:none;margin-top:10px}.pdfBox a{color:#fff;background:#198754;padding:13px;border-radius:12px;font-weight:700}
 @media print{body{background:white;color:#111}main{max-width:none;padding:0}.noPrint{display:none!important}.printArea{display:block;font-family:Arial,sans-serif}.printHeader{display:grid;grid-template-columns:70px minmax(0,1fr) 245px;gap:10px;align-items:start;border-bottom:2px solid #222;padding:0 0 10px}.printLogo{width:64px;height:64px;max-width:64px;max-height:64px;object-fit:contain;display:block}.printCompany{font-size:10.5px;line-height:1.35;min-width:0;padding-top:1px}.printCompany strong{font-size:15px;white-space:nowrap}.printContact{font-size:9.5px;line-height:1.55;white-space:nowrap;padding-top:1px}.printContact b{font-weight:700}.printTitle{text-align:center;font-size:27px;font-weight:800;margin:18px 0 12px}.printClient{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;font-size:14px}.printBox{border:1px solid #999;padding:10px;min-height:58px}.printMeta{font-size:14px;margin-bottom:18px}.printTable{width:100%;border-collapse:collapse}.printTable th,.printTable td{border:1px solid #999;padding:9px;text-align:left}.printTable th:nth-child(2),.printTable td:nth-child(2){text-align:center;width:110px}.printTable th:nth-child(3),.printTable td:nth-child(3){text-align:right;width:150px}.printTable th:nth-child(4),.printTable td:nth-child(4){text-align:center;width:95px}.printNote{margin-top:18px;font-size:11px}.printSign{display:grid;grid-template-columns:1fr;gap:30px;margin-top:45px}.printSign>div{border-top:1px solid #999;padding-top:6px;font-size:12px;min-height:45px}}
 </style></head>
 <body><main><div class="noPrint">
@@ -66,7 +67,7 @@ table{width:100%;margin-top:15px;border-collapse:collapse;background:#151922}td,
 <section class="backupPanel noPrint"><button id="backupExport" class="secondary">Sauvegarder les données</button><button id="backupImport" class="secondary">Restaurer depuis un fichier</button><input id="backupFile" type="file" accept="application/json,.json" hidden></section>
 <div id="deleteHint" class="deleteHint" style="display:none">Glisse un scan vers la gauche pour le supprimer.</div><div id="qtyModal" class="qtyModal" aria-hidden="true"><div class="qtyBox"><h3 id="qtyTitle">Quantité</h3><p>Choisis le nombre de produits à ajouter.</p><input id="qtyInput" type="number" min="1" step="1" value="1" inputmode="numeric"><div class="qtyQuick"><button data-q="1">1</button><button data-q="5">5</button><button data-q="10">10</button><button data-q="15">15</button></div><div class="qtyActions"><button id="qtyCancel" class="secondary">Annuler</button><button id="qtyOk">Ajouter</button></div></div></div>
 <p class="small">Les scans sont séparés par boutique. Tu peux changer de boutique à tout moment : les scans de l’autre boutique sont conservés. Pavé de truite X2 : articles 106680 à 33,40 €/kg et 100230 à 36,30 €/kg • truite entière vidée (article 100210) à 18,48 €/kg • filets de truite portion (article 100220) à 28,04 €/kg. Format balance : 2 + 6 chiffres article + 5 chiffres de poids en grammes + clé EAN-13. Le scan est traité directement sur l’iPhone, sans connexion Internet.</p>
-</div><section class="printArea" id="printArea"></section></main><script>const $=x=>document.getElementById(x);
+</div><section class="printArea" id="printArea"></section><div id="pdfModal" class="pdfModal noPrint" role="dialog" aria-modal="true" aria-labelledby="pdfTitle"><div class="pdfBox"><h3 id="pdfTitle">Bon de livraison prêt</h3><p>Sur iPhone, ouvrez le PDF puis touchez Partager → Imprimer pour lancer AirPrint.</p><button id="sharePdf" class="secondary">Partager le PDF</button><a id="openPdf" href="#" target="_blank" rel="noopener">Ouvrir le PDF</a><button id="closePdf" class="secondary">Fermer</button></div></div></main><script>const $=x=>document.getElementById(x);
 const PRODUCTS={
   '106680':{name:'Pavé de truite X2',price:33.40,type:'pave'},
   '100230':{name:'Pavé de truite X2',price:36.30,type:'pave'},
@@ -214,6 +215,55 @@ async function importBackup(file){
     location.reload();
   }catch(e){alert('Restauration impossible : '+(e.message||'fichier illisible'));}
 }
+function isStandalonePwa(){return navigator.standalone===true||window.matchMedia?.('(display-mode: standalone)').matches===true}
+function canvasTextLines(ctx,text,maxWidth){
+ const words=String(text).split(/\s+/),lines=[];let line='';
+ for(const word of words){const next=line?line+' '+word:word;if(line&&ctx.measureText(next).width>maxWidth){lines.push(line);line=word}else line=next}
+ if(line)lines.push(line);return lines;
+}
+function pdfFromJpeg(dataUrl,width,height){
+ const raw=atob(dataUrl.split(',')[1]),jpg=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)jpg[i]=raw.charCodeAt(i);
+ const enc=s=>new TextEncoder().encode(s),join=parts=>{const size=parts.reduce((n,p)=>n+p.length,0),out=new Uint8Array(size);let at=0;for(const p of parts){out.set(p,at);at+=p.length}return out};
+ const content='q 595 0 0 842 0 0 cm /Im0 Do Q\n';
+ const objects=[
+  enc('<< /Type /Catalog /Pages 2 0 R >>'),enc('<< /Type /Pages /Kids [3 0 R] /Count 1 >>'),
+  enc('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>'),
+  join([enc(`<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpg.length} >>\nstream\n`),jpg,enc('\nendstream')]),
+  enc(`<< /Length ${enc(content).length} >>\nstream\n${content}endstream`)
+ ];
+ const chunks=[enc('%PDF-1.4\n%âãÏÓ\n')],offsets=[0];let offset=chunks[0].length;
+ objects.forEach((obj,i)=>{offsets.push(offset);const part=join([enc(`${i+1} 0 obj\n`),obj,enc('\nendobj\n')]);chunks.push(part);offset+=part.length});
+ const xref=offset;let table=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`;for(let i=1;i<offsets.length;i++)table+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+ chunks.push(enc(table+`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`));return new Blob([join(chunks)],{type:'application/pdf'});
+}
+let pdfObjectUrl=null,pdfFile=null;
+async function createDeliveryPdf(st,ordered,isPeri,dateText){
+ try{
+  const canvas=document.createElement('canvas');canvas.width=1240;canvas.height=1754;const c=canvas.getContext('2d');if(!c)throw Error('Canvas indisponible');
+  c.fillStyle='#fff';c.fillRect(0,0,canvas.width,canvas.height);c.fillStyle='#111';c.textBaseline='top';
+  const margin=62;
+  try{const logo=new Image();logo.src='data:image/jpeg;base64,'+LOGO_BASE64;await new Promise((resolve,reject)=>{logo.onload=resolve;logo.onerror=reject});c.drawImage(logo,margin,margin,118,118)}catch{}
+  c.font='bold 25px Arial';c.fillText('PISCICULTURE MOULIN DE BOISSONNIE',205,margin+5);
+  c.font='19px Arial';['2350 route de Bois Carré','24190 Douzillac','SIRET : 498 925 062 00012'].forEach((t,i)=>c.fillText(t,205,margin+42+i*27));
+  c.font='18px Arial';['Tél. : 05 53 81 53 41','Mail : pisciculture24@orange.fr','Site : www.pechealatruite24.com'].forEach((t,i)=>c.fillText(t,760,margin+5+i*29));
+  c.strokeStyle='#222';c.lineWidth=3;c.beginPath();c.moveTo(margin,205);c.lineTo(canvas.width-margin,205);c.stroke();
+  c.textAlign='center';c.font='bold 43px Arial';c.fillText('BON DE LIVRAISON',canvas.width/2,232);c.textAlign='left';
+  c.strokeStyle='#999';c.lineWidth=2;c.strokeRect(margin,300,540,122);c.strokeRect(638,300,540,122);
+  c.font='bold 22px Arial';c.fillText('Client / Boutique',margin+18,316);c.fillText('Livraison',656,316);
+  c.font='20px Arial';c.fillText(st.name,margin+18,352);if(st.city)c.fillText(st.city,margin+18,382);
+  const dateLines=canvasTextLines(c,dateText,500);dateLines.forEach((t,i)=>c.fillText((i===0?'Date : ':'')+t,656,352+i*28));
+  const tableTop=466,tableX=margin,tableW=canvas.width-2*margin,nameW=isPeri?590:690,countW=130,weightW=isPeri?250:296,returnW=isPeri?146:0;
+  const headerH=52,rowH=Math.min(66,Math.max(42,Math.floor(920/Math.max(1,ordered.length))));
+  c.fillStyle='#e8e8e8';c.fillRect(tableX,tableTop,tableW,headerH);c.fillStyle='#111';c.font='bold 20px Arial';
+  c.fillText('Produits',tableX+12,tableTop+15);c.textAlign='center';c.fillText('Nombre',tableX+nameW+countW/2,tableTop+15);c.fillText('Poids cumulé',tableX+nameW+countW+weightW/2,tableTop+15);if(isPeri)c.fillText('Retours',tableX+nameW+countW+weightW+returnW/2,tableTop+15);c.textAlign='left';
+  let y=tableTop+headerH;
+  ordered.forEach(g=>{c.strokeStyle='#999';c.lineWidth=1;c.strokeRect(tableX,y,tableW,rowH);c.font='18px Arial';const lines=canvasTextLines(c,g.name,nameW-22).slice(0,2);lines.forEach((line,i)=>c.fillText(line,tableX+12,y+10+i*23));c.textAlign='center';c.fillText(g.count||'',tableX+nameW+countW/2,y+Math.max(10,(rowH-22)/2));c.fillText(g.unit?'—':(g.grams?kg(g.grams):'—'),tableX+nameW+countW+weightW/2,y+Math.max(10,(rowH-22)/2));if(isPeri)c.fillText('',tableX+nameW+countW+weightW+returnW/2,y+10);c.textAlign='left';y+=rowH});
+  if(isPeri){c.font='16px Arial';c.fillText('Retours : inscrire les quantités retournées, y compris pour les produits non livrés.',margin,y+14);y+=48}
+  const signY=Math.min(1640,Math.max(y+80,1530));c.strokeStyle='#222';c.beginPath();c.moveTo(margin,signY);c.lineTo(canvas.width-margin,signY);c.stroke();c.font='17px Arial';c.fillText('Réceptionné par :',margin,signY+10);c.fillText('Signature : ______________________________',margin,signY+40);
+  const blob=pdfFromJpeg(canvas.toDataURL('image/jpeg',.9),canvas.width,canvas.height);pdfFile=new File([blob],`bon-livraison-${todayISO()}.pdf`,{type:'application/pdf'});
+  if(pdfObjectUrl)URL.revokeObjectURL(pdfObjectUrl);pdfObjectUrl=URL.createObjectURL(blob);$('openPdf').href=pdfObjectUrl;$('pdfModal').classList.add('show');$('status').textContent='Bon de livraison PDF prêt à partager ou imprimer.';
+ }catch(e){alert('Création du PDF impossible. Ouvre Cumul Truites dans Safari pour utiliser l’impression : '+(e.message||''))}
+}
 function printDelivery(){
  const st=currentStore();
  const ORDER=[
@@ -269,6 +319,7 @@ function printDelivery(){
  <table class="printTable"><thead><tr><th>Produits</th><th>Nombre</th><th>Poids cumulé</th>${isPeri?'<th>Retours</th>':''}</tr></thead><tbody>${rows||'<tr><td colspan="4">Aucun produit enregistré</td></tr>'}</tbody></table>
  ${isPeri?'<div class="printPerigourdineNote"><b>Retours :</b> inscrire dans la colonne le nombre retourné pour chaque produit, y compris ceux non livrés cette semaine.</div>':''}
  <div class="printSign"><div>Réceptionné par :<br><br>Signature : ______________________________</div></div>`;
+ if(isStandalonePwa()){createDeliveryPdf(st,ordered,isPeri,dateText);return}
  window.print();
 }
 function addStore(){
@@ -372,6 +423,8 @@ $('transferAll').onclick=()=>transferScans(true);$('transferSelected').onclick=(
 $('toggleSelection').onclick=()=>{selectionMode=!selectionMode;$('toggleSelection').textContent=selectionMode?'Terminer la sélection':'Sélectionner des scans';$('selectionHint').textContent=selectionMode?'Cochez les scans à déplacer puis appuyez sur « Transférer les scans cochés ».':'Cochez un ou plusieurs scans dans l’historique pour les déplacer.';render()};
 $('backupExport').onclick=exportBackup;$('backupImport').onclick=()=>$('backupFile').click();
 $('backupFile').onchange=e=>{const file=e.target.files?.[0];if(file)importBackup(file);e.target.value=''};
+$('sharePdf').onclick=async()=>{if(!pdfFile)return;try{if(navigator.canShare?.({files:[pdfFile]}))await navigator.share({files:[pdfFile],title:'Bon de livraison'});else $('openPdf').click()}catch(e){if(e.name!=='AbortError')alert('Partage indisponible. Ouvre le PDF puis utilise le menu Partager > Imprimer.')}};
+$('closePdf').onclick=()=>$('pdfModal').classList.remove('show');$('pdfModal').onclick=e=>{if(e.target===$('pdfModal'))$('pdfModal').classList.remove('show')};
 $('undo').onclick=()=>{const items=currentStore().items;if(items.length){items.pop();render();$('status').textContent='Dernier scan annulé.'}};
 $('reset').onclick=()=>{if(confirm('Effacer cette livraison pour '+currentStore().name+' ?')){currentStore().items=[];currentStore().deliveryDate=todayISO();saveState();render();$('last').textContent='—';$('code').textContent='';$('status').textContent='Nouvelle livraison prête.'}};
 render();renderUnitButtons();attachSwipeDelete();
