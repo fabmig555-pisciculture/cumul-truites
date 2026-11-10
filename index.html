@@ -26,7 +26,7 @@ table{width:100%;margin-top:15px;border-collapse:collapse;background:#151922}td,
 @media print{body{background:white;color:#111}main{max-width:none;padding:0}.noPrint{display:none!important}.printArea{display:block;font-family:Arial,sans-serif}.printHeader{display:grid;grid-template-columns:70px minmax(0,1fr) 245px;gap:10px;align-items:start;border-bottom:2px solid #222;padding:0 0 10px}.printLogo{width:64px;height:64px;max-width:64px;max-height:64px;object-fit:contain;display:block}.printCompany{font-size:10.5px;line-height:1.35;min-width:0;padding-top:1px}.printCompany strong{font-size:15px;white-space:nowrap}.printContact{font-size:9.5px;line-height:1.55;white-space:nowrap;padding-top:1px}.printContact b{font-weight:700}.printTitle{text-align:center;font-size:27px;font-weight:800;margin:18px 0 12px}.printClient{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;font-size:14px}.printBox{border:1px solid #999;padding:10px;min-height:58px}.printMeta{font-size:14px;margin-bottom:18px}.printTable{width:100%;border-collapse:collapse}.printTable th,.printTable td{border:1px solid #999;padding:9px;text-align:left}.printTable th:nth-child(2),.printTable td:nth-child(2){text-align:center;width:110px}.printTable th:nth-child(3),.printTable td:nth-child(3){text-align:right;width:150px}.printTable th:nth-child(4),.printTable td:nth-child(4){text-align:center;width:95px}.printNote{margin-top:18px;font-size:11px}.printSign{display:grid;grid-template-columns:1fr;gap:30px;margin-top:45px}.printSign>div{border-top:1px solid #999;padding-top:6px;font-size:12px;min-height:45px}}
 </style></head>
 <body><main><div class="noPrint">
-<h1>Cumul Truites</h1><p class="muted">Scan caméra • produits • boutiques • prix</p>
+<h1>Cumul Truites</h1><p id="buildInfo" class="muted">Version V16.2 · vérification du mode d’ouverture…</p>
 <div class="card">
   <label>Boutique</label>
   <div class="storebar"><select id="storeSelect"></select><button id="addStore" class="secondary">+ Boutique</button></div>
@@ -216,6 +216,7 @@ async function importBackup(file){
   }catch(e){alert('Restauration impossible : '+(e.message||'fichier illisible'));}
 }
 function isStandalonePwa(){return navigator.standalone===true||window.matchMedia?.('(display-mode: standalone)').matches===true}
+function showBuildInfo(){const el=$('buildInfo');if(el)el.textContent='Version V16.2 · '+(isStandalonePwa()?'application iPhone · impression PDF activée':'Safari / navigateur · impression directe')}
 function canvasTextLines(ctx,text,maxWidth){
  const words=String(text).split(/\s+/),lines=[];let line='';
  for(const word of words){const next=line?line+' '+word:word;if(line&&ctx.measureText(next).width>maxWidth){lines.push(line);line=word}else line=next}
@@ -427,6 +428,6 @@ $('sharePdf').onclick=async()=>{if(!pdfFile)return;try{if(navigator.canShare?.({
 $('closePdf').onclick=()=>$('pdfModal').classList.remove('show');$('pdfModal').onclick=e=>{if(e.target===$('pdfModal'))$('pdfModal').classList.remove('show')};
 $('undo').onclick=()=>{const items=currentStore().items;if(items.length){items.pop();render();$('status').textContent='Dernier scan annulé.'}};
 $('reset').onclick=()=>{if(confirm('Effacer cette livraison pour '+currentStore().name+' ?')){currentStore().items=[];currentStore().deliveryDate=todayISO();saveState();render();$('last').textContent='—';$('code').textContent='';$('status').textContent='Nouvelle livraison prête.'}};
-render();renderUnitButtons();attachSwipeDelete();
+render();renderUnitButtons();attachSwipeDelete();showBuildInfo();
 const _render=render;render=function(){_render();attachSwipeDelete()};
 </script>
